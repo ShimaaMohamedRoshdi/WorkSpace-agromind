@@ -1,0 +1,73 @@
+/* General Section Styling */
+.healthy-life-section {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    padding: 15px 0;
+  }
+  
+  /* Leaf Top Effect */
+  .leaf-top {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* Left Side - Text Styling */
+  .text-content {
+    background-color: white;
+    padding: 50px;
+    text-align: center;
+  }
+  
+  .gradient-text {
+    font-size: 3.5rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #c39c4a, #3e683f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  /* Right Side - Dark Background */
+  .right-section {
+    background-color: #1f4631; /* Dark green */
+    color: white;
+    padding: 50px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Grid Layout for Fruits */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .icon-box img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .icon-box p {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 5px;
+  }
+  
+  /* Bottom-Right Background Illustration */
+  .vegetable-bg {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 150px;
+    opacity: 0.7;
+  }
+  
+
+
+  

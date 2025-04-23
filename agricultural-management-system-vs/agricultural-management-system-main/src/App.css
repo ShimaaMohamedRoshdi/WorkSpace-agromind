@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+
+.hero-title {
+    font-family: 'Caveat', cursive;
+}
+
+/* Fix X-Axis Scroll */
+body, html {
+  overflow-x: hidden;
+
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+  
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+
+
+
+
+
+  /* ------------------------------------------------------------------------------------------------ */
+
+/* Sign-In Page CSS */
+
+
+.signin-wrapper {
+    display: flex;
+    max-width: 900px;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    }
+  
+  .left-section {
+    width: 40%;
+    text-align: center;
+  }
+  
+  .right-section {
+    width: 50%;
+  }
+  
+  .social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .social-btn {
+    padding: 10px;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .social-btn.facebook {
+    background-color: #3b5998;
+    color: white;
+  }
+  
+  .social-btn.twitter {
+    background-color: #00acee;
+    color: white;
+  }
+  
+  .social-btn.google {
+    background-color: #db4437;
+    color: white;
+  }
+  
+  .social-btn.instagram {
+    background-color: #e1306c;
+    color: white;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .submit-btn:disabled {
+    background-color: #9e9e9e;
+    cursor: not-allowed;
+  }
+  
+  .error {
+    color: red;
+    font-size: 12px;
+  }
+
+  /* -------------------------------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------------------------- */
+/* Secondary Navbar Styles */
+.secondary-navbar {
+  background-color: #f8f8f8;
+
+  text-align: center;
+
+}
+
+.secondary-navbar-links {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.secondary-navbar-links li {
+  display: inline;
+}
+
+.secondary-navbar-links a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  transition: color 0.3s;
+  -webkit-transition: color 0.3s;
+  -moz-transition: color 0.3s;
+  -ms-transition: color 0.3s;
+  -o-transition: color 0.3s;
+}
+
+.secondary-navbar-links a:hover {
+  color: #4CAF50;
+}
+
+@media (max-width: 768px) {
+  .secondary-navbar-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+
+

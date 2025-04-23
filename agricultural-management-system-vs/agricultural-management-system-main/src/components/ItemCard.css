@@ -1,0 +1,22 @@
+.card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.card {
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.row > [class*="col-"] {
+  padding-right: 8px;
+  padding-left: 8px;
+}

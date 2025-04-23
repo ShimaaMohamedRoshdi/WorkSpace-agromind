@@ -1,0 +1,30 @@
+[
+  {
+    
+    "Name": "Tomato Seeds",
+    "Description": "High-yield hybrid tomato seeds.",
+    "PictureUrl": "https://example.com/tomato-seeds.jpg",
+    "Price": 5.99,
+    "CategoryId": 1,
+    "BrandId": 1
+  },
+  {
+   
+    "Name": "Organic Fertilizer",
+    "Description": "Eco-friendly fertilizer for healthier crops.",
+    "PictureUrl": "https://example.com/organic-fertilizer.jpg",
+    "Price": 12.50,
+    "CategoryId": 2,
+    "BrandId": 2
+  },
+  {
+    
+    "Name": "Irrigation Drip Kit",
+    "Description": "Efficient water-saving irrigation system.",
+    "PictureUrl": "https://example.com/irrigation-kit.jpg",
+    "Price": 49.99,
+    "CategoryId": 3,
+    "BrandId": 3
+   
+  }
+]

@@ -1,0 +1,24 @@
+/* ✅ Card animations */
+.food-card {
+    animation: fadeInUp 0.8s ease-in-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* ✅ Hover effect: Slightly enlarge and add shadow */
+  .food-card:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 10px 15px rgba(0, 255, 0, 0.3);
+  }
+  
+  /* ✅ Keyframes for fadeInUp animation */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
