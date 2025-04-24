@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace AgroMind.GP.APIs.Controllers
 {
-	
+
 	[Route("api/[controller]")]
 	[ApiController]
 
@@ -71,11 +71,7 @@ namespace AgroMind.GP.APIs.Controllers
 		[HttpPut("UpdateCrop/{id}")]
 		public async Task<IActionResult> UpdateCrop([FromRoute] int id, [FromBody] CropDto cropDto)
 		{
-			//if (id != cropDto.Id)
-			//{
-			//	return BadRequest();
-			//}
-
+			// Do not set or change the Id property of the entity
 			var spec = new CropSpecification(id);
 			var existingcrop = await _croprepo.GetByIdAWithSpecAsync(spec);
 
@@ -84,7 +80,11 @@ namespace AgroMind.GP.APIs.Controllers
 				return NotFound();
 			}
 
-			_mapper.Map(cropDto, existingcrop); // Map DTO to existing entity
+			// Remove any assignment like: existingcrop.Id = cropDto.Id;
+			// Only map non-key fields
+			var originalId = existingcrop.Id; // Save the original Id
+			_mapper.Map(cropDto, existingcrop);
+			existingcrop.Id = originalId; // Ensure Id is not changed
 			await _croprepo.UpdateAsync(existingcrop);
 
 			return Ok(); // 204 No Content

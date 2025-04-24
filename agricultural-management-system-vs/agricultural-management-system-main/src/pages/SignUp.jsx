@@ -122,7 +122,7 @@ const SignUp = () => {
       if (error.response) {
         alert(
           JSON.stringify(error.response.data, null, 2) ||
-            "Error during sign-up. Please try again."
+          "Error during sign-up. Please try again."
         );
       } else {
         alert("Error during sign-up. Please try again.");

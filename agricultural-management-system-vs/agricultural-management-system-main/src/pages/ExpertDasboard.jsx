@@ -56,6 +56,7 @@ const ExpertDashboard = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [editingCropId, setEditingCropId] = useState(null);
   const [cropImage, setCropImage] = useState("");
+  const [description, setDescription] = useState("");
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [selectedCropId, setSelectedCropId] = useState(null);
@@ -102,12 +103,14 @@ const ExpertDashboard = () => {
       });
   };
 
+  // Copilot update from line 109 to 144:
   const handleOpenUpdateDialog = (cropId) => {
     const crop = crops.find((c) => c.id === cropId);
     setEditingCropId(crop.id);
     setCropName(crop.cropName);
-    setStages(crop.stages);
-    setCropImage(crop.cropImage);
+    setStages(JSON.parse(JSON.stringify(crop.stages || [])));
+    setCropImage(crop.cropImage || "");
+    setDescription(crop.description || "");
     setOpenUpdateDialog(true);
   };
 
@@ -117,20 +120,13 @@ const ExpertDashboard = () => {
       setOpenUpdateDialog(false);
       return;
     }
-
-    // Prepare payload for update
-    const totalCost = stages.reduce(
-      (sum, stage) => sum + Number(stage.cost || 0),
-      0
-    );
-
     const mappedStages = stages.map((stage) => ({
-      stageName: stage.stage || "",
+      stageName: stage.stage || stage.stageName || "",
       duration: Number(stage.duration) || 0,
       description: stage.description || "",
       pictureUrl: stage.pictureUrl || "",
-      totalCost: Number(stage.cost) || 0,
-      optionalLink: stage.link || "",
+      totalCost: Number(stage.cost || stage.totalCost) || 0,
+      optionalLink: stage.link || stage.optionalLink || "",
       steps: (stage.steps || []).map((step) => ({
         stepName: step.stepName || "",
         tool: step.tool || "",
@@ -142,26 +138,28 @@ const ExpertDashboard = () => {
         description: step.description || "",
       })),
     }));
-
     const normalizedCropImage = (cropImage || "").replace(/\\/g, "/");
-
     const payload = {
       cropName: cropName === "Other" ? customCrop : cropName,
       cropImage: normalizedCropImage,
+      description,
       stages: mappedStages,
     };
-
     api
       .put(`/api/Crop/UpdateCrop/${editingCropId}`, payload)
       .then(() => {
         setSuccessMessage("Crop updated successfully!");
         setOpenUpdateDialog(false);
         setEditingCropId(null);
-        // Refresh crop list
-        api
-          .get("/api/Crop/GetAllCrops")
-          .then((res) => setCrops(res.data))
-          .catch((err) => console.error("Error fetching crops:", err));
+        api.get("/api/Crop/GetAllCrops").then((res) => {
+          setCrops(res.data);
+          // Copilot update from line 166 to 170:
+          setCropName("");
+          setCustomCrop("");
+          setStages([]);
+          setCropImage("");
+          setDescription("");
+        });
       })
       .catch((error) => {
         console.error("Error updating crop:", error);
@@ -231,6 +229,7 @@ const ExpertDashboard = () => {
     const payload = {
       cropName: (cropName === "Other" ? customCrop : cropName) || "",
       cropImage: normalizedCropImage,
+      description: description || "",
       stages: mappedStages,
     };
 
@@ -256,6 +255,7 @@ const ExpertDashboard = () => {
     setCustomCrop("");
     setStages([]);
     setCropImage("");
+    setDescription("");
     setEditingCropId(null);
   };
 
@@ -269,12 +269,6 @@ const ExpertDashboard = () => {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const payload = {
-    cropName: cropName === "Other" ? customCrop : cropName,
-    cropImage, // this is just a string URL now
-    stages, // includes all your steps too
   };
 
   return (
@@ -353,7 +347,10 @@ const ExpertDashboard = () => {
               >
                 Cancel
               </Button>
-              <Button onClick={handleConfirmUpdate} color="success">
+              <Button
+                onClick={handleConfirmUpdate}
+                color="success"
+              >
                 Confirm
               </Button>
             </DialogActions>
@@ -390,6 +387,15 @@ const ExpertDashboard = () => {
                 onChange={(e) => setCustomCrop(e.target.value)}
               />
             )}
+
+            <label className="fw-bold mt-2">Description:</label>
+            <input
+              type="text"
+              className="form-control w-50"
+              placeholder="Enter Description"
+              value={description || ""}
+              onChange={(e) => setDescription(e.target.value)}
+            />
 
             <label className="fw-bold mt-2">Crop Image URL:</label>
             <input
@@ -554,8 +560,12 @@ const ExpertDashboard = () => {
             Total Cost: $
             {stages.reduce((sum, stage) => sum + Number(stage.cost || 0), 0)}
           </div>
-          <button className="btn btn-success w-50 mt-3" onClick={handleSubmit}>
-            {editingCropId ? "Update Crop" : "Save Crop"}
+          {/* Only call handleSubmit for new crops, and handleConfirmUpdate for editing */}
+          <button
+            className="btn btn-success w-50 mt-3"
+            onClick={editingCropId ? handleConfirmUpdate : handleSubmit}
+          >
+            Save Crop
           </button>
         </div>
       </div>
