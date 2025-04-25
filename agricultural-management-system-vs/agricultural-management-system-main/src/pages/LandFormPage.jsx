@@ -25,7 +25,7 @@ export default function LandFormPage() {
   // Fetch lands list from backend
   const fetchLands = async () => {
     try {
-      const response = await api.get("/api/Land/GetLands"); // Corrected endpoint to match backend
+      const response = await api.get("/GetLands"); // Use controller action route only
       setLands(response.data);
     } catch (error) {
       console.error("Error fetching lands:", error);
@@ -141,21 +141,13 @@ export default function LandFormPage() {
 
     try {
       if (formData.id) {
-        await api.put(`/land/${formData.id}`, formData);
-        await fetchLands();
+        console.log("Updating land:", formData);
+        const res = await api.put(`/land/${formData.id}`, formData);
+        console.log("UpdateLand response:", res);
       } else {
-        const response = await api.post("/land/AddLand", formData);
-        console.log("POST /land/AddLand response:", response);
-        const newLand = response.data;
-        if (newLand && newLand.id) {
-          setLands((prevLands) => [...prevLands, newLand]);
-          console.log("Updated lands state:", [...lands, newLand]);
-        } else {
-          console.warn(
-            "New land data invalid or missing id, fetching lands list"
-          );
-          await fetchLands();
-        }
+        console.log("Adding new land:", formData);
+        const res = await api.post("/land/AddLand", formData);
+        console.log("AddLand response:", res);
       }
 
       setFormData({
@@ -177,7 +169,7 @@ export default function LandFormPage() {
       alert("Land saved successfully!");
     } catch (err) {
       alert("Error saving land");
-      console.error(err);
+      console.error("Error in handleSubmit:", err);
     }
   };
 
