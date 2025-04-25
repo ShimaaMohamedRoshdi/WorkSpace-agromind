@@ -1,11 +1,10 @@
-
-
 /* 🌟 Shop Banner */
 .shop-banner {
   position: relative;
   width: 100vw;
   min-height: 50vh;
-  background: url("../assets/images/shop-detail.jpg") center/cover no-repeat fixed;
+  background: url("../assets/images/shop-detail.jpg") center/cover no-repeat
+    fixed !important;
   display: flex;
   align-items: center;
   justify-content: center;

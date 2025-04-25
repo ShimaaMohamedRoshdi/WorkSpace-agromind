@@ -1,12 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link for navigation
-import "./ShopBanner.css";
+import { Link } from "react-router-dom";
+import "./BannerHerbicides.css";
 
-const ShopBanner = () => {
+const BannerHerbicides = () => {
   return (
-    <section className="shop-banner">
+    <section className="shop-banner3">
       {/* 🔥 Overlay */}
-      <div className="overlay"></div>
+      <div className="overlayy3"></div>
 
       {/* Content on top of overlay */}
       <div className="content">
@@ -17,14 +17,11 @@ const ShopBanner = () => {
           <Link to="/" className="breadcrumb-link">
             Home
           </Link>{" "}
-          ➝
-          <Link to="/crops" className="breadcrumb-link">
-            Shop Crops
-          </Link>
+          ➝<Link className="breadcrumb-link">Shop BannerHerbicides</Link>
         </nav>
       </div>
     </section>
   );
 };
 
-export default ShopBanner;
+export default BannerHerbicides;
