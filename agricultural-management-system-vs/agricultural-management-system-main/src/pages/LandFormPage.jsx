@@ -207,199 +207,225 @@ export default function LandFormPage() {
   };
 
   return (
-    <div className="grid grid-cols-12 gap-4 p-4">
-      {/* Sidebar */}
-      <div className="col-lg-2 md:col-span-3 bg-gray-100 p-4 rounded shadow">
-        <h2 className="text-lg font-bold mb-4">My Lands</h2>
-        {lands.length === 0 ? (
-          <p>No lands added yet.</p>
-        ) : (
-          <ul className="space-y-3">
-            {lands.map((land) => (
-              <li
-                key={land.id}
-                className="bg-white p-3 shadow rounded flex justify-between items-center"
-              >
-                <div>
-                  <p className="font-semibold">{land.landName}</p>
-                  <p className="text-sm text-gray-500">{land.size}</p>
-                </div>
-                <div className="space-x-2">
-                  <button
-                    onClick={() => handleEdit(land)}
-                    className="text-blue-500 hover:underline text-sm"
+    <div className="container-fluid px-0">
+      <div className="row g-0">
+        {/* Sidebar - flush left, no space */}
+        <div
+          className="col-lg-2 col-md-4 col-12 px-0"
+          style={{
+            minHeight: "100vh",
+            background: "#f8f9fa",
+            borderRight: "1px solid #e0e0e0",
+          }}
+        >
+          <div className="p-4 h-100">
+            <h2 className="fs-5 fw-bold mb-4 text-success">My Lands</h2>
+            {lands.length === 0 ? (
+              <p className="text-muted">No lands added yet.</p>
+            ) : (
+              <ul className="list-unstyled">
+                {lands.map((land) => (
+                  <li
+                    key={land.id}
+                    className="bg-white p-3 mb-3 rounded d-flex justify-content-between align-items-center shadow-sm"
                   >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(land.id)}
-                    className="text-red-500 hover:underline text-sm"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* Form - Right */}
-      <div className="col-lg-9 md:col-span-9 bg-white p-6 shadow rounded">
-        <h2 className="text-xl font-bold mb-4">
-          {formData.id ? "Update Land" : "Add Land Information"}
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4 p-3">
-          <div>
-            <label className="block font-semibold">Land Name:</label>
-            <input
-              type="text"
-              name="landName"
-              placeholder="Land Name"
-              value={formData.landName}
-              onChange={handleChange}
-              className="w-full border p-2"
-            />
-            {errors.landName && (
-              <p className="text-red-500">{errors.landName}</p>
+                    <div>
+                      <div className="fw-semibold text-success">
+                        {land.landName}
+                      </div>
+                      <div className="text-secondary small">{land.size}</div>
+                    </div>
+                    <div className="d-flex gap-2">
+                      <button
+                        onClick={() => handleEdit(land)}
+                        className="btn btn-outline-success btn-sm px-3"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(land.id)}
+                        className="btn btn-outline-danger btn-sm px-3"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
+        </div>
 
-          <div>
-            <label className="block font-semibold">Land Size:</label>
-            <input
-              type="text"
-              name="size"
-              value={formData.size}
-              placeholder="Size (e.g., 5 acres)"
-              onChange={handleChange}
-              className="w-full border p-2"
-            />
-            {errors.size && <p className="text-red-500">{errors.size}</p>}
-          </div>
-
-          <div>
-            <label className="block font-semibold">Soil Type:</label>
-            <select
-              name="soilType"
-              value={formData.soilType}
-              onChange={handleChange}
-              className="w-full border p-2"
-            >
-              <option value="">-- Select Soil Type --</option>
-              {soilTypes.map((type, index) => (
-                <option key={index} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            {errors.soilType && (
-              <p className="text-red-500">{errors.soilType}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block font-semibold">Irrigation Type:</label>
-            <select
-              name="irrigationType"
-              value={formData.irrigationType}
-              onChange={handleChange}
-              className="w-full border p-2"
-            >
-              <option value="">-- Select Irrigation Type --</option>
-              {irrigationTypes.map((type, index) => (
-                <option key={index} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            {errors.irrigationType && (
-              <p className="text-red-500">{errors.irrigationType}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block font-semibold">Start Date:</label>
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              className="w-full border p-2"
-            />
-            {errors.startDate && (
-              <p className="text-red-500">{errors.startDate}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block font-semibold">Search Location:</label>
-            <LocationSearch onLocationSelect={handleLocationSelect} />
-            {errors.latitude && (
-              <p className="text-red-500">{errors.latitude}</p>
-            )}
-            {errors.longitude && (
-              <p className="text-red-500">{errors.longitude}</p>
-            )}
-          </div>
-          <div>
-            <label className="block font-semibold">Weather Condition:</label>
-            <input
-              type="text"
-              name="weatherCondition"
-              value={formData.weatherCondition}
-              placeholder="e.g., Sunny, Rainy"
-              onChange={handleChange}
-              className="w-full border p-2"
-            />
-          </div>
-          <div>
-            <label className="block font-semibold">Status:</label>
-            <input
-              type="text"
-              name="status"
-              value={formData.status}
-              placeholder="e.g., Active, Completed"
-              onChange={handleChange}
-              className="w-full border p-2"
-            />
-          </div>
-
-          <div>
-            <label className="block font-semibold">Picture URL:</label>
-            <input
-              type="text"
-              name="pictureUrl"
-              value={formData.pictureUrl}
-              placeholder="https://example.com/image.jpg"
-              onChange={handleChange}
-              className="w-full border p-2"
-            />
-            {errors.pictureUrl && (
-              <p className="text-red-500">{errors.pictureUrl}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block font-semibold">Water Source:</label>
-            <input
-              type="text"
-              name="waterSource"
-              value={formData.waterSource}
-              placeholder="e.g., Well, River"
-              onChange={handleChange}
-              className="w-full border p-2"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded mt-4"
-            onClick={handleSubmit}
+        {/* Form */}
+        <div className="col-lg-9 col-md-8 col-12 px-0">
+          <div
+            className="bg-white p-4 shadow pe-5"
+            style={{ minHeight: "100vh" }}
           >
-            Save
-          </button>
-        </form>
+            <h2 className="fs-4 fw-bold mb-4 text-success">
+              {formData.id ? "Update Land" : "Add Land Information"}
+            </h2>
+            <form onSubmit={handleSubmit} className="row ">
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Land Name</label>
+                <input
+                  type="text"
+                  name="landName"
+                  placeholder="Land Name"
+                  value={formData.landName}
+                  onChange={handleChange}
+                  className="form-control"
+                />
+                {errors.landName && (
+                  <div className="text-danger small">{errors.landName}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Land Size</label>
+                <input
+                  type="text"
+                  name="size"
+                  value={formData.size}
+                  placeholder="Size (e.g., 5 acres)"
+                  onChange={handleChange}
+                  className="form-control"
+                />
+                {errors.size && (
+                  <div className="text-danger small">{errors.size}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Soil Type</label>
+                <select
+                  name="soilType"
+                  value={formData.soilType}
+                  onChange={handleChange}
+                  className="form-select"
+                >
+                  <option value="">-- Select Soil Type --</option>
+                  {soilTypes.map((type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                {errors.soilType && (
+                  <div className="text-danger small">{errors.soilType}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">
+                  Irrigation Type
+                </label>
+                <select
+                  name="irrigationType"
+                  value={formData.irrigationType}
+                  onChange={handleChange}
+                  className="form-select"
+                >
+                  <option value="">-- Select Irrigation Type --</option>
+                  {irrigationTypes.map((type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                {errors.irrigationType && (
+                  <div className="text-danger small">
+                    {errors.irrigationType}
+                  </div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Start Date</label>
+                <input
+                  type="date"
+                  name="startDate"
+                  value={formData.startDate}
+                  onChange={handleChange}
+                  className="form-control"
+                />
+                {errors.startDate && (
+                  <div className="text-danger small">{errors.startDate}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">
+                  Search Location
+                </label>
+                <LocationSearch onLocationSelect={handleLocationSelect} />
+                {errors.latitude && (
+                  <div className="text-danger small">{errors.latitude}</div>
+                )}
+                {errors.longitude && (
+                  <div className="text-danger small">{errors.longitude}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">
+                  Weather Condition
+                </label>
+                <input
+                  type="text"
+                  name="weatherCondition"
+                  value={formData.weatherCondition}
+                  placeholder="e.g., Sunny, Rainy"
+                  onChange={handleChange}
+                  className="form-control"
+                />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Status</label>
+                <input
+                  type="text"
+                  name="status"
+                  value={formData.status}
+                  placeholder="e.g., Active, Completed"
+                  onChange={handleChange}
+                  className="form-control"
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label fw-semibold">Picture URL</label>
+                <input
+                  type="text"
+                  name="pictureUrl"
+                  value={formData.pictureUrl}
+                  placeholder="https://example.com/image.jpg"
+                  onChange={handleChange}
+                  className="form-control"
+                />
+                {errors.pictureUrl && (
+                  <div className="text-danger small">{errors.pictureUrl}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Water Source</label>
+                <input
+                  type="text"
+                  name="waterSource"
+                  value={formData.waterSource}
+                  placeholder="e.g., Well, River"
+                  onChange={handleChange}
+                  className="form-control"
+                />
+              </div>
+              <div className=" text-end mt-3">
+                <button
+                  type="submit"
+                  className="btn btn-success me-5 fw-bold shadow-sm"
+                  style={{
+                    borderRadius: 8,
+                    fontSize: 17,
+                    letterSpacing: 0.5,
+                  }}
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );
