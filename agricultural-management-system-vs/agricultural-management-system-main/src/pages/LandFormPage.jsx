@@ -350,29 +350,7 @@ export default function LandFormPage() {
               <p className="text-red-500">{errors.longitude}</p>
             )}
           </div>
-          <div>
-            <label className="block font-semibold">Weather Condition:</label>
-            <input
-              type="text"
-              name="weatherCondition"
-              value={formData.weatherCondition}
-              placeholder="e.g., Sunny, Rainy"
-              onChange={handleChange}
-              className="w-full border p-2"
-            />
-          </div>
-          <div>
-            <label className="block font-semibold">Status:</label>
-            <input
-              type="text"
-              name="status"
-              value={formData.status}
-              placeholder="e.g., Active, Completed"
-              onChange={handleChange}
-              className="w-full border p-2"
-            />
-          </div>
-
+       
           <div>
             <label className="block font-semibold">Picture URL:</label>
             <input
