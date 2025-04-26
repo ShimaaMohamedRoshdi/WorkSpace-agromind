@@ -1,106 +1,5 @@
-// import React, { useState } from "react";
-// import { useSelector } from "react-redux";
-// import {
-//   FaHome,
-//   FaLeaf,
-//   FaShoppingCart,
-//   FaInfoCircle,
-//   FaHeart,
-//   FaBars,
-//   FaTimes,
-// } from "react-icons/fa";
-// import { MdLogout } from "react-icons/md";
-// import { Link } from "react-router-dom";
-// import logo from "../assets/images/logo-no-background.png";
-
-// import './Navbar.css'
-
-// export default function Navbar() {
-//   const cartQuantity = useSelector((state) => state.cart.totalQuantity);
-//   const wishlistCount = useSelector((state) => state.wishlist.totalItems || 0);
-//   const [menuOpen, setMenuOpen] = useState(false);
-
-//   return (
-//     <nav className="navbar">
-//       <div className="navbar-container">
-//         <div className="navbar-logo">
-//           <img src={logo} alt="Logo" />
-//         </div>
-
-//         {/* Toggle button with dynamic icon */}
-//         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
-//           {menuOpen ? <FaTimes /> : <FaBars />}
-//         </button>
-
-//         <ul
-//           className={`navbar-links ${menuOpen ? "active" : ""}`}
-//           onClick={() => setMenuOpen(false)}
-//         >
-//           <li>
-//             <Link to="/home" className="navbar-item">
-//               <FaHome /> Home
-//             </Link>
-//           </li>
-//           <li>
-//             <Link to="/crops" className="navbar-item">
-//               <FaLeaf /> Crops
-//             </Link>
-//           </li>
-//           <li>
-//             <Link to="/cart" className="navbar-item  icon-container">
-//               <FaShoppingCart /> {" "}
-//               {cartQuantity > 0 && (
-//                 <span className="counter">{cartQuantity}</span>
-//               )}
-//             </Link>
-//           </li>
-//           <li>
-//             <Link to="/about" className="navbar-item">
-//               <FaInfoCircle /> About Us
-//             </Link>
-//           </li>
-//           <li>
-//             <Link to="/wishlist" className="navbar-item icon-container ">
-//               <FaHeart /> {" "}
-//               {wishlistCount > 0 && (
-//                 <span className="counter">{wishlistCount}</span>
-//               )}
-//             </Link>
-//           </li>
-//           <li>
-//             <Link to="/logout" className="navbar-item">
-//               <MdLogout /> Logout
-//             </Link>
-//           </li>
-//         </ul>
-//       </div>
-//     </nav>
-//   );
-// }
-
-
-
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaTwitter,
   FaFacebookF,
@@ -120,7 +19,7 @@ import "./Navbar.css"; // Import your custom CSS file
 export default function Navbar() {
   const cartQuantity = useSelector((state) => state.cart.totalQuantity);
   const wishlistQuantity = useSelector((state) => state.wishlist.totalItems);
-  
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {
@@ -130,7 +29,45 @@ export default function Navbar() {
   const closeNavbar = () => {
     setIsOpen(false);
   };
- 
+
+  const navigate = useNavigate();
+  // Get all product arrays from Redux
+  const {
+    products = [],
+    products2 = [],
+    products3 = [],
+    products4 = [],
+  } = useSelector((state) => state.product || {});
+  // Combine all products
+  const allProducts = [...products, ...products2, ...products3, ...products4];
+  // Search state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  // Handle search input
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (value.trim().length === 0) {
+      setSearchResults([]);
+      setShowDropdown(false);
+      return;
+    }
+    // Filter products by name (case-insensitive)
+    const results = allProducts.filter(
+      (p) => p.name && p.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setSearchResults(results.slice(0, 8)); // Limit to 8 results
+    setShowDropdown(true); // Always show dropdown if input is not empty
+  };
+
+  // Handle click on a product
+  const handleResultClick = (id) => {
+    setSearchTerm("");
+    setShowDropdown(false);
+    navigate(`/product/${id}`);
+  };
 
   return (
     <nav className="bg-white border-bottom">
@@ -139,9 +76,16 @@ export default function Navbar() {
         <div className="d-flex justify-content-between align-items-center">
           {/* Contact Info */}
           <div className="d-flex gap-3 text-secondary small">
-            <span><FiPhoneCall className="text-success me-1" /> +20 01066585154</span>
-            <span><MdEmail className="text-danger me-1" /> GraduationProject2025@gmail.com</span>
-            <span><MdLocationOn className="text-warning me-1" /> Cairo ,NasrCity</span>
+            <span>
+              <FiPhoneCall className="text-success me-1" /> +20 01066585154
+            </span>
+            <span>
+              <MdEmail className="text-danger me-1" />{" "}
+              GraduationProject2025@gmail.com
+            </span>
+            <span>
+              <MdLocationOn className="text-warning me-1" /> Cairo ,NasrCity
+            </span>
           </div>
 
           {/* Social Icons */}
@@ -164,22 +108,108 @@ export default function Navbar() {
 
           {/* Toggle Button (☰) - Fixed Color */}
           <button
-  className="navbar-toggler d-lg-none"
-  type="button"
-  onClick={handleToggle}
-  style={{ color: "green", border: "1px solid green", padding: "5px 10px" }} // Ensure visibility
->
-  <span className="navbar-toggler-icon" style={{ backgroundImage: "none" }}>
-    ☰ {/* Custom hamburger icon */}
-  </span>
-</button>
-
+            className="navbar-toggler d-lg-none"
+            type="button"
+            onClick={handleToggle}
+            style={{
+              color: "green",
+              border: "1px solid green",
+              padding: "5px 10px",
+            }} // Ensure visibility
+          >
+            <span
+              className="navbar-toggler-icon"
+              style={{ backgroundImage: "none" }}
+            >
+              ☰ {/* Custom hamburger icon */}
+            </span>
+          </button>
         </div>
 
         {/* Search Bar */}
-        <div className="search-container mt-1 mt-md-0 w-100 ">
-          <input type="text" className="form-control" placeholder="Search products..." />
-          <button className="btn  ms-1">🔍</button>
+        <div className="search-container mt-1 mt-md-0 w-100 position-relative">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            onFocus={() => setShowDropdown(searchResults.length > 0)}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+            style={{ zIndex: 1050 }}
+          />
+          <button className="btn ms-1" tabIndex={-1}>
+            🔍
+          </button>
+          {/* Dropdown results */}
+          {showDropdown && (
+            <ul
+              className="list-group position-absolute w-100 shadow"
+              style={{
+                zIndex: 2000,
+                maxHeight: 320,
+                overflowY: "auto",
+                background: "#fff",
+                border: "1px solid #e0e0e0",
+                borderRadius: 8,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+                padding: 0,
+                margin: 0,
+                top: "100%",
+                left: 0,
+                scrollbarWidth: "thin",
+                scrollbarColor: "#b5e7b5 #f8f8f8",
+              }}
+            >
+              {searchTerm && searchResults.length === 0 && (
+                <li
+                  className="list-group-item text-center text-muted"
+                  style={{
+                    border: "none",
+                    background: "#fff",
+                    fontStyle: "italic",
+                  }}
+                >
+                  No products found 😕!
+                </li>
+              )}
+              {searchResults.map((product) => (
+                <li
+                  key={product.id}
+                  className="list-group-item list-group-item-action d-flex align-items-center"
+                  style={{
+                    cursor: "pointer",
+                    border: "none",
+                    padding: "10px 12px",
+                    transition: "background 0.2s",
+                  }}
+                  onMouseDown={() => handleResultClick(product.id)}
+                  onMouseOver={(e) =>
+                    (e.currentTarget.style.background = "#eafbe7")
+                  }
+                  onMouseOut={(e) =>
+                    (e.currentTarget.style.background = "#fff")
+                  }
+                >
+                  {product.image && (
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      style={{
+                        width: 32,
+                        height: 32,
+                        objectFit: "contain",
+                        marginRight: 12,
+                        borderRadius: 4,
+                        border: "1px solid #eee",
+                      }}
+                    />
+                  )}
+                  <span style={{ fontWeight: 500 }}>{product.name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* Wishlist, Cart, and Register Icon */}
@@ -209,38 +239,99 @@ export default function Navbar() {
       </div>
 
       {/* Bottom Navigation - Menu Links */}
-      <div >
+      <div>
         <nav className="navbar nv navbar-expand-lg navbar-light">
           <div className="container-fluid">
             {/* Centered Navigation Links on Large Screens */}
-            <div className={`collapse navbar-collapse justify-content-lg-center ${isOpen ? "show" : ""}`} id="navbarNav">
+            <div
+              className={`collapse navbar-collapse justify-content-lg-center ${
+                isOpen ? "show" : ""
+              }`}
+              id="navbarNav"
+            >
               <ul className="navbar-nav text-center">
-                <li className="nav-item"><Link className="nav-link fw-bold text-dark" to="/home" onClick={closeNavbar}>Home</Link></li>
-                <li className="nav-item"><Link className="nav-link fw-bold text-dark" to="/about" onClick={closeNavbar}>About</Link></li>
-                <li className="nav-item"><Link className="nav-link fw-bold text-dark" to="/services" onClick={closeNavbar}>Services</Link></li>
-                <li className="nav-item"><Link className="nav-link fw-bold text-dark" to="/projects" onClick={closeNavbar}>Projects</Link></li>
-                <li className="nav-item"><Link className="nav-link fw-bold text-dark" to="/news" onClick={closeNavbar}>News</Link></li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link fw-bold text-dark"
+                    to="/home"
+                    onClick={closeNavbar}
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link fw-bold text-dark"
+                    to="/about"
+                    onClick={closeNavbar}
+                  >
+                    About
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link fw-bold text-dark"
+                    to="/services"
+                    onClick={closeNavbar}
+                  >
+                    Services
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link fw-bold text-dark"
+                    to="/projects"
+                    onClick={closeNavbar}
+                  >
+                    Projects
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link fw-bold text-dark"
+                    to="/news"
+                    onClick={closeNavbar}
+                  >
+                    News
+                  </Link>
+                </li>
                 {/* <li className="nav-item"><Link className="nav-link fw-bold text-dark" to="/crops" onClick={closeNavbar}>Shop</Link></li> */}
                 <li className="nav-item dropdown">
-  <Link
-    className="nav-link fw-bold text-dark dropdown-toggle"
-    to="#"
-    id="shopDropdown"
-    role="button"
-    data-bs-toggle="dropdown"
-    aria-expanded="false"
-  >
-    Shop
-  </Link>
-  <ul className="dropdown-menu" aria-labelledby="shopDropdown">
-    <li><Link className="dropdown-item" to="/crops">All Crops</Link></li>
-    <li><Link className="dropdown-item" to="/shopproducts">Shop Products</Link></li>
-    {/* <li><Link className="dropdown-item" to="/fruits">Fruits</Link></li>
+                  <Link
+                    className="nav-link fw-bold text-dark dropdown-toggle"
+                    to="#"
+                    id="shopDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Shop
+                  </Link>
+                  <ul className="dropdown-menu" aria-labelledby="shopDropdown">
+                    <li>
+                      <Link className="dropdown-item" to="/crops">
+                        All Crops
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/shopproducts">
+                        Shop Products
+                      </Link>
+                    </li>
+                    {/* <li><Link className="dropdown-item" to="/fruits">Fruits</Link></li>
     <li><Link className="dropdown-item" to="/seeds">Seeds</Link></li> */}
-  </ul>
-</li>
+                  </ul>
+                </li>
 
-                <li className="nav-item"><Link className="nav-link fw-bold text-dark" to="/signup" onClick={closeNavbar}>Contact</Link></li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link fw-bold text-dark"
+                    to="/signup"
+                    onClick={closeNavbar}
+                  >
+                    Contact
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
