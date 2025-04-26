@@ -60,6 +60,11 @@ const ItemCard = ({ product }) => {
         alt={product.name}
       />
       <h6 className="mt-2 fw-bold">{product.name}</h6>
+      {product.category && product.category.toLowerCase() !== "crop" && (
+        <p className="text-muted mb-1" style={{ fontSize: "0.85rem" }}>
+          {product.category}
+        </p>
+      )}
       <p className="text-success fw-bold">${product.price}</p>
       <div className="d-flex justify-content-center gap-2">
         <button

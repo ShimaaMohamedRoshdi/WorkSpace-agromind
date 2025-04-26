@@ -318,6 +318,11 @@ export default function Navbar() {
                         Shop Products
                       </Link>
                     </li>
+                    <li>
+                      <Link className="dropdown-item" to="/shopChemicals">
+                        Shop Chemicals
+                      </Link>
+                    </li>
                     {/* <li><Link className="dropdown-item" to="/fruits">Fruits</Link></li>
     <li><Link className="dropdown-item" to="/seeds">Seeds</Link></li> */}
                   </ul>

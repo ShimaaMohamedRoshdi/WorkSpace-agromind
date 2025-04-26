@@ -4,32 +4,17 @@ import ItemCard from "../components/ItemCard";
 
 import ShopBanner from "../components/ShopBanner";
 
-
 const ShopPage = () => {
   return (
     <div>
       <ShopBanner />
-      <div className="container mt-4">
-        <div className="row ">
-          {" "}
-          {/* ✅ Fix spacing */}
-          {/* Left Sidebar - Categories */}
-          {/* <div className="col-lg-2 col-md-4">
-        <Categories />
-      </div> */}
-          {/* Right Side - Products */}
-          <div className="col-lg-12 col-md-8">
-            <div className="row">
-              {mockData2.map((product) => (
-                <div
-                  key={product.id}
-                  className="col-lg-2 col-md-6 col-sm-6 mb-2"
-                >
-                  <ItemCard product={product} />
-                </div>
-              ))}
+      <div className="  container py-5">
+        <div className="row cols-md-3 cols-sm-6 row-cols-lg-5  ">
+          {mockData2.map((product) => (
+            <div key={product.id} className="col">
+              <ItemCard product={product} />
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

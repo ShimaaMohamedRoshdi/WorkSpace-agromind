@@ -43,6 +43,7 @@ import FeaturedProducts from "./pages/FeaturedProducts";
 import Herbicides from "./pages/Herbicides";
 import OrganicPesticides from "./pages/OrganicPesticides";
 import Fertilizers from "./pages/Fertilizers";
+import ShopChemicals from "./pages/ShopChemicals";
 
 function App() {
   const [order, setOrder] = useState(null);
@@ -80,6 +81,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
 
         <Route path="/add-land" element={<LandFormPage />} />
+        <Route path="/shopChemicals" element={<ShopChemicals />} />
 
         <Route path="/category/featured" element={<FeaturedProducts />} />
         <Route path="/category/fertilizers" element={<Fertilizers />} />

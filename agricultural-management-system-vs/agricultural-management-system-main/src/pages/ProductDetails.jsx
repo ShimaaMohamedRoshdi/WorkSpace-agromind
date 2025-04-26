@@ -3,7 +3,9 @@ import { FaQuestion, FaTruck } from "react-icons/fa";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { addToCart } from "../redux/cartSlice"; // Fixed typo in addToCart
+import { addToCart } from "../redux/cartSlice";
+import { Snackbar, Alert } from "@mui/material";
+import "./ProductDetails.css";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
@@ -26,6 +28,10 @@ const ProductDetails = () => {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [showDelivery, setShowDelivery] = useState(false);
+  const [showQuestionForm, setShowQuestionForm] = useState(false);
+  const [question, setQuestion] = useState("");
+  const [alertOpen, setAlertOpen] = useState(false);
 
   if (!product) return <div>Product not found.</div>;
 
@@ -36,27 +42,38 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     const itemToAdd = { ...product, quantity };
-    dispatch(addToCart(itemToAdd)); // Add product to the Redux store (cart)
-    setIsModalVisible(true); // Show the modal
+    dispatch(addToCart(itemToAdd));
+    setIsModalVisible(true);
   };
 
   const closeModal = () => {
-    setIsModalVisible(false); // Close the modal
+    setIsModalVisible(false);
   };
 
   const handleContinueShopping = () => {
     navigate("/crops");
-    closeModal(); // Close the modal and let the user continue shopping
+    closeModal();
   };
 
   const handleGoToCart = () => {
     navigate("/cart");
-    closeModal(); // Close the modal
+    closeModal();
+  };
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") return;
+    setAlertOpen(false);
+  };
+
+  const handleQuestionSubmit = (e) => {
+    e.preventDefault();
+    setAlertOpen(true);
+    setQuestion("");
+    setShowQuestionForm(false);
   };
 
   return (
     <div className="container py-4">
-      {/* Modal */}
       {isModalVisible && (
         <div className="modal fade show d-block" tabIndex="-1">
           <div className="modal-dialog modal-dialog-centered">
@@ -85,72 +102,151 @@ const ProductDetails = () => {
         </div>
       )}
 
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Thank you for your question! We will get back to you soon.
+        </Alert>
+      </Snackbar>
+
       <div className="row">
-        {/* Product Image */}
-        <div className="col-md-6 d-flex align-items-center justify-content-center border p-3">
+        <div className="col-md-6 product-image-container">
           {product.image ? (
-            <img
-              src={product.image}
-              alt={product.name}
-              className="img-fluid w-50"
-            />
+            <img src={product.image} alt={product.name} className="img-fluid" />
           ) : (
             <div className="text-muted">No Image Available</div>
           )}
         </div>
 
-        {/* Product Information */}
-        <div className="col-md-4 border p-4">
-          <h2 className="mb-3">{product.name}</h2>
-          <p className="text-success fs-4">${product.price}</p>
+        <div className="col-md-4 product-info">
+          <h2>{product.name}</h2>
+          <p className="price">${product.price}</p>
 
-          <div className="d-flex align-items-center mb-3">
-            <button
-              onClick={() => handleQuantityChange("decrease")}
-              className="btn btn-outline-secondary"
-            >
+          <div className="quantity-controls">
+            <button onClick={() => handleQuantityChange("decrease")}>
               <AiOutlineMinus />
             </button>
             <input
               type="number"
               id="quantity"
               min="1"
-              className="form-control text-center mx-2"
               value={quantity}
               readOnly
-              style={{ width: "60px" }}
             />
-            <button
-              onClick={() => handleQuantityChange("increase")}
-              className="btn btn-outline-secondary"
-            >
+            <button onClick={() => handleQuantityChange("increase")}>
               <AiOutlinePlus />
             </button>
           </div>
 
-          <button onClick={handleAddToCart} className="btn btn-danger w-100">
+          <button className="add-to-cart-btn" onClick={handleAddToCart}>
             Add to Cart
           </button>
 
-          <div className="mt-4">
-            <p className="d-flex align-items-center">
-              <FaTruck className="me-2" />
-              Delivery & Return
-            </p>
-            <p className="d-flex align-items-center">
-              <FaQuestion className="me-2" />
-              Ask a Question
-            </p>
+          <div
+            className="delivery-return"
+            onClick={() => setShowDelivery(!showDelivery)}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <FaTruck />
+            <span>Delivery & Return</span>
           </div>
+          {showDelivery && (
+            <div
+              className="delivery-info"
+              style={{ marginTop: "8px", fontSize: "0.9rem", color: "#555" }}
+            >
+              <p>
+                We offer fast and reliable delivery within 3-5 business days.
+              </p>
+              <p>Returns accepted within 30 days of purchase with receipt.</p>
+            </div>
+          )}
+          <div
+            className="ask-question"
+            onClick={() => setShowQuestionForm(!showQuestionForm)}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              marginTop: "16px",
+            }}
+          >
+            <FaQuestion />
+            <span>Ask a Question</span>
+          </div>
+          {showQuestionForm && (
+            <form
+              className="question-form"
+              onSubmit={handleQuestionSubmit}
+              style={{ marginTop: "8px" }}
+            >
+              <textarea
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder="Type your question here..."
+                required
+                style={{
+                  width: "100%",
+                  minHeight: "80px",
+                  padding: "8px",
+                  fontSize: "0.9rem",
+                }}
+              />
+              <button type="submit" className="btn btn-success mt-2">
+                Submit Question
+              </button>
+            </form>
+          )}
         </div>
       </div>
 
-      <div className="mt-4">
-        <h3 className="fw-bold">Product Description</h3>
+      <div className="product-description">
+        <h3>Product Description</h3>
         <p>{product.description || "Product description will go here"}</p>
+      </div>
+
+      <div className="related-products-section">
+        <h4>Related Products</h4>
+        <div className="related-products-row">
+          {allProducts
+            .filter(
+              (p) => p.id !== product.id && p.category === product.category
+            )
+            .slice(0, 4)
+            .map((related) => (
+              <div
+                className="related-product-card"
+                key={related.id}
+                onClick={() => navigate(`/product/${related.id}`)}
+              >
+                {related.image && (
+                  <img
+                    src={related.image}
+                    alt={related.name}
+                    className="related-product-image"
+                  />
+                )}
+                <div className="related-product-name">{related.name}</div>
+                <div className="related-product-price">${related.price}</div>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
 };
-
 export default ProductDetails;
