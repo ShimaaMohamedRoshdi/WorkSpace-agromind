@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link for navigation
-import "./ShopBanner.css"; 
+import "./ShopBanner.css";
 
 const ShopBanner = () => {
   return (
@@ -14,8 +14,13 @@ const ShopBanner = () => {
         <h1 className="title ">SHOP CROPS</h1>
         <div className="underline"></div>
         <nav className="breadcrumb-container">
-          <Link to="/" className="breadcrumb-link">Home</Link> ➝  
-          <Link to="/crops" className="breadcrumb-link">Shop Crops</Link>
+          <Link to="/" className="breadcrumb-link">
+            Home
+          </Link>{" "}
+          ➝
+          <Link to="/crops" className="breadcrumb-link">
+            Shop Crops
+          </Link>
         </nav>
       </div>
     </section>

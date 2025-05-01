@@ -25,7 +25,7 @@ export default function LandFormPage() {
   // Fetch lands list from backend
   const fetchLands = async () => {
     try {
-      const response = await api.get("/api/Land/GetLands"); // Corrected endpoint to match backend
+      const response = await api.get("/GetLands"); // Use controller action route only
       setLands(response.data);
     } catch (error) {
       console.error("Error fetching lands:", error);
@@ -139,23 +139,30 @@ export default function LandFormPage() {
       return;
     }
 
+    // Map frontend fields to backend fields
+    const mappedData = {
+      Id: formData.id,
+      Name: formData.landName,
+      AreaSize: parseFloat(formData.size),
+      SoilType: formData.soilType,
+      IrrigationType: formData.irrigationType,
+      StartDate: formData.startDate,
+      Latitude: parseFloat(formData.latitude),
+      Longitude: parseFloat(formData.longitude),
+      PictureUrl: formData.pictureUrl,
+
+      waterSource: formData.waterSource,
+    };
+
     try {
       if (formData.id) {
-        await api.put(`/land/${formData.id}`, formData);
-        await fetchLands();
+        console.log("Updating land:", mappedData);
+        const res = await api.put(`/land/${formData.id}`, mappedData);
+        console.log("UpdateLand response:", res);
       } else {
-        const response = await api.post("/land/AddLand", formData);
-        console.log("POST /land/AddLand response:", response);
-        const newLand = response.data;
-        if (newLand && newLand.id) {
-          setLands((prevLands) => [...prevLands, newLand]);
-          console.log("Updated lands state:", [...lands, newLand]);
-        } else {
-          console.warn(
-            "New land data invalid or missing id, fetching lands list"
-          );
-          await fetchLands();
-        }
+        console.log("Adding new land:", mappedData);
+        const res = await api.post("/land/AddLand", mappedData);
+        console.log("AddLand response:", res);
       }
 
       setFormData({
@@ -177,7 +184,7 @@ export default function LandFormPage() {
       alert("Land saved successfully!");
     } catch (err) {
       alert("Error saving land");
-      console.error(err);
+      console.error("Error in handleSubmit:", err);
     }
   };
 
@@ -215,64 +222,58 @@ export default function LandFormPage() {
   };
 
   return (
-    <div className="grid grid-cols-12 gap-4 p-4">
-      {/* Sidebar */}
-      <div className="col-lg-2 md:col-span-3 bg-gray-100 p-4 rounded shadow">
-        <h2 className="text-lg font-bold mb-4">My Lands</h2>
-        {lands.length === 0 ? (
-          <p>No lands added yet.</p>
-        ) : (
-          <ul className="space-y-3">
-            {lands.map((land) => (
-              <li
-                key={land.id}
-                className="bg-white p-3 shadow rounded flex justify-between items-center"
-              >
-                <div>
-                  <p className="font-semibold">{land.landName}</p>
-                  <p className="text-sm text-gray-500">{land.size}</p>
-                </div>
-                <div className="space-x-2">
-                  <button
-                    onClick={() => handleEdit(land)}
-                    className="text-blue-500 hover:underline text-sm"
+    <div className="container-fluid px-0">
+      <div className="row g-0">
+        {/* Sidebar - flush left, no space */}
+        <div
+          className="col-lg-2 col-md-4 col-12 px-0"
+          style={{
+            minHeight: "100vh",
+            background: "#f8f9fa",
+            borderRight: "1px solid #e0e0e0",
+          }}
+        >
+          <div className="p-4 h-100">
+            <h2 className="fs-5 fw-bold mb-4 text-success">My Lands</h2>
+            {lands.length === 0 ? (
+              <p className="text-muted">No lands added yet.</p>
+            ) : (
+              <ul className="list-unstyled">
+                {lands.map((land) => (
+                  <li
+                    key={land.id || land.Id}
+                    className="bg-white p-3 mb-3 rounded d-flex justify-content-between align-items-center shadow-sm"
                   >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(land.id)}
-                    className="text-red-500 hover:underline text-sm"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* Form - Right */}
-      <div className="col-lg-9 md:col-span-9 bg-white p-6 shadow rounded">
-        <h2 className="text-xl font-bold mb-4">
-          {formData.id ? "Update Land" : "Add Land Information"}
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4 p-3">
-          <div>
-            <label className="block font-semibold">Land Name:</label>
-            <input
-              type="text"
-              name="landName"
-              placeholder="Land Name"
-              value={formData.landName}
-              onChange={handleChange}
-              className="w-full border p-2"
-            />
-            {errors.landName && (
-              <p className="text-red-500">{errors.landName}</p>
+                    <div>
+                      <div className="fw-semibold text-success">
+                        {land.Name || land.landName}
+                      </div>
+                      <div className="text-secondary small">
+                        {land.AreaSize || land.size}
+                      </div>
+                    </div>
+                    <div className="d-flex gap-2">
+                      <button
+                        onClick={() => handleEdit(land)}
+                        className="btn btn-outline-success btn-sm px-3"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(land.id || land.Id)}
+                        className="btn btn-outline-danger btn-sm px-3"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
+        </div>
 
+<<<<<<< HEAD
           <div>
             <label className="block font-semibold">Land Size:</label>
             <input
@@ -382,10 +383,155 @@ export default function LandFormPage() {
             type="submit"
             className="bg-green-500 text-white px-4 py-2 rounded mt-4"
             onClick={handleSubmit}
+=======
+        {/* Form */}
+        <div className="col-lg-9 col-md-8 col-12 px-0">
+          <div
+            className="bg-white p-4 shadow pe-5"
+            style={{ minHeight: "100vh" }}
+>>>>>>> recovered-branch
           >
-            Save
-          </button>
-        </form>
+            <h2 className="fs-4 fw-bold mb-4 text-success">
+              {formData.id ? "Update Land" : "Add Land Information"}
+            </h2>
+            <form onSubmit={handleSubmit} className="row ">
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Land Name</label>
+                <input
+                  type="text"
+                  name="landName"
+                  placeholder="Land Name"
+                  value={formData.landName}
+                  onChange={handleChange}
+                  className="form-control"
+                />
+                {errors.landName && (
+                  <div className="text-danger small">{errors.landName}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Land Size</label>
+                <input
+                  type="text"
+                  name="size"
+                  value={formData.size}
+                  placeholder="Size (e.g., 5 acres)"
+                  onChange={handleChange}
+                  className="form-control"
+                />
+                {errors.size && (
+                  <div className="text-danger small">{errors.size}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Soil Type</label>
+                <select
+                  name="soilType"
+                  value={formData.soilType}
+                  onChange={handleChange}
+                  className="form-select"
+                >
+                  <option value="">-- Select Soil Type --</option>
+                  {soilTypes.map((type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                {errors.soilType && (
+                  <div className="text-danger small">{errors.soilType}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">
+                  Irrigation Type
+                </label>
+                <select
+                  name="irrigationType"
+                  value={formData.irrigationType}
+                  onChange={handleChange}
+                  className="form-select"
+                >
+                  <option value="">-- Select Irrigation Type --</option>
+                  {irrigationTypes.map((type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                {errors.irrigationType && (
+                  <div className="text-danger small">
+                    {errors.irrigationType}
+                  </div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Start Date</label>
+                <input
+                  type="date"
+                  name="startDate"
+                  value={formData.startDate}
+                  onChange={handleChange}
+                  className="form-control"
+                />
+                {errors.startDate && (
+                  <div className="text-danger small">{errors.startDate}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">
+                  Search Location
+                </label>
+                <LocationSearch onLocationSelect={handleLocationSelect} />
+                {errors.latitude && (
+                  <div className="text-danger small">{errors.latitude}</div>
+                )}
+                {errors.longitude && (
+                  <div className="text-danger small">{errors.longitude}</div>
+                )}
+              </div>
+
+              <div className="col-md-4">
+                <label className="form-label fw-semibold">Picture URL</label>
+                <input
+                  type="text"
+                  name="pictureUrl"
+                  value={formData.pictureUrl}
+                  placeholder="https://example.com/image.jpg"
+                  onChange={handleChange}
+                  className="form-control"
+                />
+                {errors.pictureUrl && (
+                  <div className="text-danger small">{errors.pictureUrl}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Water Source</label>
+                <input
+                  type="text"
+                  name="waterSource"
+                  value={formData.waterSource}
+                  placeholder="e.g., Well, River"
+                  onChange={handleChange}
+                  className="form-control"
+                />
+              </div>
+              <div className=" text-end mt-3">
+                <button
+                  type="submit"
+                  className="btn btn-success me-5 fw-bold shadow-sm"
+                  style={{
+                    borderRadius: 8,
+                    fontSize: 17,
+                    letterSpacing: 0.5,
+                  }}
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );

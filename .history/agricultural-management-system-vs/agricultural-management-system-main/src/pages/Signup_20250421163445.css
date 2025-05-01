@@ -1,0 +1,232 @@
+/* Loading Animation for the green square */
+@keyframes rotateSquare {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* body, html {
+    overflow-x: hidden;
+  
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden; 
+    
+  } */
+/* * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+   */
+
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 9999;
+}
+
+.square {
+  width: 100px;
+  height: 100px;
+  background-color: green;
+  animation: rotateSquare 3s linear infinite;
+}
+
+.logo-img {
+  width: 30%;
+}
+
+.logo-div {
+  text-align: center;
+
+  width: 100%;
+}
+
+.signup-wrapper {
+  display: flex;
+  max-width: 900px;
+  margin: 50px auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.left-section {
+  flex: 1;
+  padding: 30px;
+  background-color: #f4f7fa;
+  text-align: center;
+}
+
+.left-section h2 {
+  font-size: 1.8rem;
+  color: #2f7c31;
+  margin-bottom: 10px;
+}
+
+.left-section p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.facebook {
+  background-color: #3b5998;
+}
+
+.twitter {
+  background-color: #1da1f2;
+}
+
+.google {
+  background-color: #db4437;
+}
+
+.instagram {
+  background-color: #e4405f;
+}
+
+.right-section {
+  flex: 1;
+  padding: 30px;
+  text-align: center;
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+.right-section h1 {
+  font-size: 2rem;
+  color: #2f7c31;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: #757599;
+}
+
+.terms {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #2f7c31;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #256126;
+}
+
+@media (max-width: 768px) {
+  .signup-wrapper {
+    flex-direction: column;
+  }
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.half-width {
+  flex: 1;
+}
+
+/* Styling for radio buttons in a single row */
+.row .form-group label {
+  margin-right: 10px;
+}
+
+.gender-options {
+  display: flex;
+  gap: 20px; /* Adds spacing between radio buttons */
+  align-items: center; /* Ensures proper vertical alignment */
+}
+
+.gender-options label {
+  display: flex;
+  align-items: center;
+  gap: 1px; /* Adds small space between radio button and text */
+}
+.logo-container {
+  text-align: center; /* Centers the logo horizontally */
+  margin-bottom: 20px; /* Adds space between the logo and the rest of the form */
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+  display: inline-block; /* Ensures proper alignment */
+}
+
+.login-here-div {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  max-width: 900px;
+  margin: 50px auto;
+  border-radius: 10px;
+  text-align: center;
+}
+.login-here-div p a {
+  color: #2f7c31 !important;
+  text-decoration: none;
+}
+
+.login-here-div p {
+  color: #000; /* Default color for the <p> tag */
+}

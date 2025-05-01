@@ -11,24 +11,22 @@ const Crops = () => {
   }
 
   return (
-    
-  <div>
-    <ShopBanner/>
+    <div>
+      <ShopBanner />
       <div className="container py-5 ">
-    
-    <h2 className="text-center mb-5 fw-bold">Explore Our Category</h2>
-    <div
-      className="row row-cols-1 row-cols-md-3 row-cols-lg-5
+        <h2 className="text-center mb-5 fw-bold">Explore Our Category</h2>
+        <div
+          className="row row-cols-1 row-cols-md-3 row-cols-lg-5
    g-4"
-    >
-      {products.map((product) => (
-        <div key={product.id} className="col">
-          <ProductCard product={product} />
+        >
+          {products.map((product) => (
+            <div key={product.id} className="col">
+              <ProductCard product={product} />
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
-  </div>
-  </div>
   );
 };
 
