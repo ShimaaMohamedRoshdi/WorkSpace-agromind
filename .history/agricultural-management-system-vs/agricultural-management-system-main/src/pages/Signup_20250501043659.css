@@ -101,12 +101,7 @@
 .instagram {
   background-color: #e4405f;
 }
-.signup-wrapper .right-section {
-  background-color: #fff !important;
-}
-.signin-wrapper .right-section {
-  background-color: #fff !important;
-}
+
 .right-section {
   flex: 1;
   padding: 30px;
@@ -114,8 +109,9 @@
   background-color: #fff !important;
   color: #000 !important;
 }
-.bggg {
+.bggg{
   background-color: #fff !important;
+  color: #000 !important;
 }
 
 .right-section h1 {

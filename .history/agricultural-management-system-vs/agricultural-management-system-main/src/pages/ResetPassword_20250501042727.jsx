@@ -1,46 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import api from "../../services/api";
+import { useLocation } from 'react-router-dom';
+import api from '../../services/api';
 import "./ResetPassword.css";
 
+
 const ResetPassword = () => {
-  const [email, setEmail] = useState("");
-  const [token, setToken] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+  const [email, setEmail] = useState('');
+  const [token, setToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    setEmail(queryParams.get("email") || "");
-    setToken(queryParams.get("token") || "");
+    setEmail(queryParams.get('email') || '');
+    setToken(queryParams.get('token') || '');
+    
   }, [location.search]);
 
   const handleSubmit = async (e) => {
-    console.log({ email: email, token: token });
+    console.log({"email": email, "token": token});
 
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError('Passwords do not match.');
       return;
     }
 
     try {
-      const response = await api.post("/api/Accounts/ResetPassword", {
+
+      const response = await api.post('/api/Accounts/ResetPassword', {
         email,
         token,
         newPassword,
         confirmPassword,
       });
       setMessage("password changed successfully"); // Success message
-      setError("");
+      setError('');
     } catch (err) {
-      setError("Failed to reset password. Please try again.");
-      setMessage("");
+      setError('Failed to reset password. Please try again.');
+      setMessage('');
     }
   };
 
@@ -79,13 +82,11 @@ const ResetPassword = () => {
 
       {message && (
         <div>
-          <p style={{ color: "green" }}>{message}</p>
-          <button className="submit-btn" onClick={() => navigate("/signin")}>
-            Go to Login
-          </button>
+        <p style={{ color: 'green' }}>{message}</p>
+        <button className="submit-btn" onClick={() => navigate('/signin')}>Go to Login</button>
         </div>
       )}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };

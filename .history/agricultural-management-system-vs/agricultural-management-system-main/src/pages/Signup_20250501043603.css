@@ -101,21 +101,13 @@
 .instagram {
   background-color: #e4405f;
 }
-.signup-wrapper .right-section {
-  background-color: #fff !important;
-}
-.signin-wrapper .right-section {
-  background-color: #fff !important;
-}
+
 .right-section {
   flex: 1;
   padding: 30px;
   text-align: center;
-  background-color: #fff !important;
+  background-color: #fff!;
   color: #000 !important;
-}
-.bggg {
-  background-color: #fff !important;
 }
 
 .right-section h1 {

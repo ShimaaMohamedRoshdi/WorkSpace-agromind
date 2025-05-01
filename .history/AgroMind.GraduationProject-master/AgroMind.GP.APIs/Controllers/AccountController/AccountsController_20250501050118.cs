@@ -211,7 +211,7 @@ namespace AgroMind.GP.APIs.Controllers.AccountController
 					//var token = await _tokenService.CreateTokenAsync(user, _userManager); //is wrong
 					var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 						Console.WriteLine($"Generated Token: {token}");	
-var resetPasswordLink = $"http://localhost:5132/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
+var resetPasswordLink = $"http://localhost:532/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
 					// Generate a password reset token
 					
 				

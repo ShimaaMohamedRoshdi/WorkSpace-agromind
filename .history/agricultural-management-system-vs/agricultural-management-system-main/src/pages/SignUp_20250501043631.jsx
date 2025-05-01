@@ -167,7 +167,7 @@ const SignUp = () => {
           </div>
         </div>
 
-        <div className="right-section ">
+        <div className="right-section b">
           {/* <h1>Register</h1> */}
           <Formik
             initialValues={{

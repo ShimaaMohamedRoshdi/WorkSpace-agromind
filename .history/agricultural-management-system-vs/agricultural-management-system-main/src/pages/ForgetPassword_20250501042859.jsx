@@ -7,8 +7,8 @@ import "./ForgetPassword.css";
 const ForgetPassword = () => {
   console.log("Forget Password Page Rendered");
 
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -18,12 +18,16 @@ const ForgetPassword = () => {
 
   const onSubmit = async (values) => {
     try {
-      const response = await api.post("/api/Accounts/SendEmail", { email: values.email });
-      setMessage(response.data.message || "Password reset link sent successfully.");
-      setError('');
+      const response = await api.post("/api/Accounts/SendEmail", {
+        email: values.email,
+      });
+      setMessage(
+        response.data.message || "Password reset link sent successfully."
+      );
+      setError("");
     } catch (err) {
-      setError('Failed to send reset email. Please try again.');
-      setMessage('');
+      setError("Failed to send reset email. Please try again.");
+      setMessage("");
     }
   };
 
@@ -46,12 +50,14 @@ const ForgetPassword = () => {
             />
             <ErrorMessage name="email" component="div" className="error" />
           </div>
-          <button type="submit" className="submit-btn">Send Reset Link</button>
+          <button type="submit" className="submit-btn">
+            Send Reset Link
+          </button>
         </Form>
       </Formik>
 
       {message && <p>{message}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };
