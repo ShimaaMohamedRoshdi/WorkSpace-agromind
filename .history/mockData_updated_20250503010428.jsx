@@ -1,0 +1,52 @@
+import img1 from "./ابو-خنجر-امامي-400x457.jpg";
+import img2 from "./اقحوان-ام-400x457.jpg";
+import img3 from "./حار-اخضر-امامي-400x457.jpg";
+import img4 from "./خبيزة-امامي-400x457.jpg";
+import img5 from "./شمر-امامي-400x457.jpg";
+import img6 from "./فراولة-امامي-400x457.jpg";
+import img7 from "./كمثرى-صفرا-امامى-400x457.jpg";
+import img8 from "./وينكا-امامي-400x457.jpg";
+import img9 from "./ينسون-امامي-400x457.jpg";
+
+import image11 from "./1 (3).png";
+import image12 from "./2 (2).png";
+import image13 from "./4 (1).png";
+import image14 from "./3.png";
+import image15 from "./5.png";
+import image16 from "./6.png";
+import image17 from "./7.png";
+import image18 from "./8.png";
+import image19 from "./image-2.jpg";
+import image20 from "./image-3.jpg";
+import image21 from "./image-4.jpg";
+import image22 from "./image-5.jpg";
+import image23 from "./image-6 (1).jpg";
+import image26 from "./image-7.jpg";
+import image24 from "./image-11.jpg";
+import image25 from "./image-12.jpg";
+
+import image30 from "./OrganicPesticides/1613051031تاجليس.jpg";
+import image32 from "./OrganicPesticides/1613936763برفكتووان.jpg";
+import image31 from "./OrganicPesticides/1613936859توبناين.jpg";
+import image33 from "./OrganicPesticides/1624802097tehnooil.jpg";
+import image34 from "./OrganicPesticides/1639311621image00025.png";
+import image35 from "./OrganicPesticides/1641207507image00002.png";
+import image36 from "./OrganicPesticides/1691318586zentari.jpg";
+import image37 from "./OrganicPesticides/1692103940كوفريت.jpg";
+
+import image70 from "./Herbicides/1613124523اتلانت.jpg";
+import image71 from "./Herbicides/1613129904تايجرفوس.jpg";
+import image72 from "./Herbicides/1613936534باسفوليارسوبر.jpg";
+import image73 from "./Herbicides/1613936784بلنتبرود.jpg";
+import image74 from "./Herbicides/1613937037بوباكسلارج.jpeg";
+import image75 from "./Herbicides/1613937641جرين.jpg";
+import image76 from "./Herbicides/1613937811دلتاميكرو.jpg";
+import image77 from "./Herbicides/1613937962روتباور.jpg";
+import image78 from "./Herbicides/17272567911000088067.png";
+
+import image100 from "./insecticides/1613129111افينيو.jpg";
+import image101 from "./insecticides/1613130137اييزو.jpg";
+import image102 from "./insecticides/1613130904بيني.jpg";
+import image103 from "./insecticides/1613135142شينوك.jpg";
+import image104 from "./insecticides/1613931825برناستار.jpg";
+import image105 from "./insecticides/1623152749chinook.jpg";
