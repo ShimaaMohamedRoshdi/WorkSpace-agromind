@@ -1,15 +1,7 @@
 import AOS from "aos";
 import "aos/dist/aos.css";
-
-// AOS.init({
-//   duration: 600, // 🔥 Faster animations (0.6s)
-//   offset: 50,    // ⬆️ Trigger animation earlier
-//   easing: "ease-in-out", // 🎬 Smooth transitions
-// });
 AOS.init({ duration: 800, easing: "ease-out", once: false });
-
 import React, { useState } from "react";
-
 import {
   BrowserRouter as Router,
   Route,
@@ -32,7 +24,6 @@ import FarmEquipment from "./pages/FarmEquipment";
 import CropGrowing from "./pages/CropGrowing";
 import AnimalHusbandry from "./pages/AnimalHusbandry";
 import ProductDetails from "./pages/ProductDetails";
-
 import Order from "./pages/Order";
 import ShopPage from "./pages/ShopPage";
 import Dashboard from "./pages/ExpertDasboard";
@@ -46,15 +37,12 @@ import Fertilizers from "./pages/Fertilizers";
 import ShopChemicals from "./pages/ShopChemicals";
 import Insecticides from "./pages/insecticides.JSX";
 import ShopByCategory from "./pages/ShopByCategory";
-
+import RecommendPlan from "./pages/RecommendPlan";
 function App() {
   const [order, setOrder] = useState(null);
   return (
     <Router>
       <Navbar />
-      {/* <SecondaryNavbar/>
-            <div class="wave"></div> */}
-
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/signup" element={<SignUp />} />
@@ -67,32 +55,25 @@ function App() {
         <Route path="/shopproducts" element={<ShopPage />} />
         <Route path="/shop-by-category" element={<ShopByCategory />} />
         <Route path="/product/:id" element={<ProductDetails />} />
-
         <Route path="/market" element={<Market />} />
         <Route path="/cart" element={<Cart />} />
-        {/* <Route path="/checkout" element={<CheckOut />} /> */}
         <Route path="/checkout" element={<CheckOut setOrder={setOrder} />} />
         <Route path="/order" element={<Order order={order} />} />
-
         <Route path="/wishlist" element={<Wishlist />} />
-        {/* <Route path="/order" element={<Order/>} /> */}
-
         <Route path="/checkout" element={<CheckOut setOrder={() => {}} />} />
         <Route path="/farm-equipment" element={<FarmEquipment />} />
         <Route path="/crop-growing" element={<CropGrowing />} />
         <Route path="/animal-husbandry" element={<AnimalHusbandry />} />
         <Route path="/dashboard" element={<Dashboard />} />
-
         <Route path="/add-land" element={<LandFormPage />} />
+        <Route path="/RecommendPlan" element={<RecommendPlan/>} />
         <Route path="/shopChemicals" element={<ShopChemicals />} />
-
         <Route path="/category/featured" element={<FeaturedProducts />} />
         <Route path="/category/fertilizers" element={<Fertilizers />} />
         <Route path="/category/organic" element={<OrganicPesticides />} />
         <Route path="/category/herbicides" element={<Herbicides />} />
         <Route path="/category/insecticides" element={<Insecticides />} />
       </Routes>
-
       <Footer />
     </Router>
   );
