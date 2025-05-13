@@ -1,0 +1,51 @@
+
+.animal-container {
+  padding: 20px;
+  background-color: #f8f9fa; /* Light gray background */
+  border-radius: 10px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  padding: 20px 0;
+}
+
+.category-card {
+  margin: auto;
+  background: #e8f5e9;
+  border-radius: 8px;
+  padding: 10px 0;
+  width: 240px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+}
+
+.category-icon {
+  font-size: 40px;
+  color: #28a745; /* Green color */
+  margin-bottom: 10px;
+}
+
+.category-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 5px 0;
+}
+
+.category-count {
+  font-size: 14px;
+  color: #6c757d; /* Gray text */
+}

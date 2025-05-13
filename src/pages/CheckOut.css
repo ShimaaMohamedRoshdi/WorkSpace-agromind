@@ -1,0 +1,84 @@
+
+  
+  /* Card Styling */
+  .cardd {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .cardd:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-header {
+    background: #f4f4f4;
+    padding: 12px 16px;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .card-body {
+    padding: 5px;
+  }
+  
+  /* Form Styling */
+  .form-label {
+    font-weight: 500;
+    color: #444;
+  }
+  
+  .form-control {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 6px;
+    transition: all 0.3s;
+  }
+  
+  .form-control:focus {
+    border-color: #165b33;
+    box-shadow: 0 0 6px rgba(22, 91, 51, 0.3);
+  }
+  
+  /* Payment Option Styling */
+  .form-check-input:checked {
+    background-color: #165b33;
+    border-color: #165b33;
+  }
+  
+  /* Order Summary Styling */
+  .list-group-item {
+    border: none;
+    padding: 12px;
+    background: #fafafa;
+  }
+  
+  .list-group-item h6 {
+    margin-bottom: 2px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .list-group-item small {
+    color: #777;
+  }
+  
+  /* Button Styling */
+  .btn-success {
+    background-color: #165b33;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+  
+  .btn-success:hover {
+    background-color: #0e3e22;
+    transform: scale(1.02);
+  }
+  

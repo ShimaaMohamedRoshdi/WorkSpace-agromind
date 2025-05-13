@@ -1,0 +1,106 @@
+ItemCard.css
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: #fff!important;
+  transition: box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+  max-width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+h6.fw-bold {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.text-success.fw-bold {
+  font-size: 1rem;
+  color: #27ae60;
+  margin-bottom: 12px;
+}
+
+.d-flex.justify-content-center.gap-2 {
+  gap: 10px;
+}
+
+.btn-outline-success.btn-sm,
+.btn-outline-danger.btn-sm,
+.btn-outline-dark.btn-sm,
+.btn-danger.btn-sm {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-success.btn-sm:hover {
+  background-color: #27ae60;
+  color: white;
+  border-color: #27ae60;
+}
+
+.btn-outline-danger.btn-sm:hover {
+  background-color: #e74c3c;
+  color: white;
+  border-color: #e74c3c;
+}
+
+.btn-outline-dark.btn-sm:hover {
+  background-color: #34495e;
+  color: white;
+  border-color: #34495e;
+}
+
+.btn-danger.btn-sm {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+}
+
+.btn-danger.btn-sm:hover {
+  background-color: #c0392b;
+}
+
+@media (max-width: 768px) {
+  .card-img-top {
+    max-height: 120px;
+  }
+  h6.fw-bold {
+    font-size: 1rem;
+  }
+  .text-success.fw-bold {
+    font-size: 0.9rem;
+  }
+  .btn-outline-success.btn-sm,
+  .btn-outline-danger.btn-sm,
+  .btn-outline-dark.btn-sm,
+  .btn-danger.btn-sm {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+}
