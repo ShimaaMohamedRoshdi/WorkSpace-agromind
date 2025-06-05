@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Snackbar, Alert } from "@mui/material";
 import "../App.css";
-import { motion } from "framer-motion";
+//import { motion } from "framer-motion";
 
 //This is a functional component that takes a product object as a prop.
 const ProductCard = ({ product }) => {

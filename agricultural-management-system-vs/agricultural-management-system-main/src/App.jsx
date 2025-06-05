@@ -38,6 +38,7 @@ import ShopChemicals from "./pages/ShopChemicals";
 import Insecticides from "./pages/insecticides.JSX";
 import ShopByCategory from "./pages/ShopByCategory";
 import RecommendPlan from "./pages/RecommendPlan";
+import PlanProgress from './pages/PlanPrograss';
 function App() {
   const [order, setOrder] = useState(null);
   return (
@@ -64,7 +65,7 @@ function App() {
         <Route path="/farm-equipment" element={<FarmEquipment />} />
         <Route path="/crop-growing" element={<CropGrowing />} />
         <Route path="/animal-husbandry" element={<AnimalHusbandry />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/expert-dashboard" element={<Dashboard />} />
         <Route path="/add-land" element={<LandFormPage />} />
         <Route path="/RecommendPlan" element={<RecommendPlan/>} />
         <Route path="/shopChemicals" element={<ShopChemicals />} />
@@ -73,6 +74,8 @@ function App() {
         <Route path="/category/organic" element={<OrganicPesticides />} />
         <Route path="/category/herbicides" element={<Herbicides />} />
         <Route path="/category/insecticides" element={<Insecticides />} />
+        <Route path="/plan-progress/:planId" element={<PlanProgress />} />
+
       </Routes>
       <Footer />
     </Router>

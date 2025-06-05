@@ -1,40 +1,29 @@
 import React, { useState, useEffect } from "react";
 import api from "../../services/api";
-import LocationSearch from "../components/LocationSearch";
 import Joi from "joi";
+import { useNavigate } from "react-router-dom";
+
+const token = localStorage.getItem("token");
 
 export default function LandFormPage() {
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [modalAction, setModalAction] = useState(null);
+  const [selectedLandId, setSelectedLandId] = useState(null);
+  const [selectedLand, setSelectedLand] = useState(null);
+  const [lands, setLands] = useState([]);
+  const [errors, setErrors] = useState({});
+
   const [formData, setFormData] = useState({
     id: null,
     landName: "",
     size: "",
     soilType: "",
     irrigationType: "",
-    startDate: "",
-    latitude: "",
-    longitude: "",
     pictureUrl: "",
-    weatherCondition: "",
+    location: "",
     waterSource: "",
-    status: "",
   });
-
-  const [lands, setLands] = useState([]);
-  const [errors, setErrors] = useState({});
-
-  // Fetch lands list from backend
-  const fetchLands = async () => {
-    try {
-      const response = await api.get("/GetLands"); // Use controller action route only
-      setLands(response.data);
-    } catch (error) {
-      console.error("Error fetching lands:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchLands();
-  }, []);
 
   const soilTypes = [
     "Clay",
@@ -49,6 +38,7 @@ export default function LandFormPage() {
     "Red Soil",
     "Alluvial",
   ];
+
   const irrigationTypes = [
     "Surface Irrigation",
     "Drip Irrigation",
@@ -60,6 +50,29 @@ export default function LandFormPage() {
     "Flood Irrigation",
     "Basin Irrigation",
     "Border Irrigation",
+  ];
+
+  const governorates = [
+    "Cairo",
+    "Alexandria",
+    "Giza",
+    "Shubra El Kheima",
+    "Port Said",
+    "Suez",
+    "Mansoura",
+    "Tanta",
+    "Asyut",
+    "Ismailia",
+    "Zagazig",
+    "Fayoum",
+    "Beni Suef",
+    "Qena",
+    "Luxor",
+    "Aswan",
+    "Damanhour",
+    "Minya",
+    "Damietta",
+    "Helwan",
   ];
 
   const schema = Joi.object({
@@ -88,47 +101,42 @@ export default function LandFormPage() {
         "any.only": "Please select a valid irrigation type.",
         "any.required": "Irrigation Type is required.",
       }),
-    startDate: Joi.date().required().messages({
-      "date.base": "Start Date must be a valid date.",
-      "any.required": "Start Date is required.",
-    }),
-    latitude: Joi.number().required().messages({
-      "number.base": "Latitude must be a number.",
-      "any.required": "Latitude is required.",
-    }),
-    longitude: Joi.number().required().messages({
-      "number.base": "Longitude must be a number.",
-      "any.required": "Longitude is required.",
-    }),
-    pictureUrl: Joi.string().uri().optional().messages({
+    location: Joi.string()
+      .valid(...governorates)
+      .required()
+      .messages({
+        "any.only": "Please select a valid governorate.",
+        "any.required": "Governorate is required.",
+      }),
+    pictureUrl: Joi.string().uri().allow("").optional().messages({
       "string.uri": "Picture URL must be a valid URL.",
     }),
-    weatherCondition: Joi.string().optional().messages({
-      "string.base": "Weather Condition must be a string.",
-    }),
-    waterSource: Joi.string().optional().messages({
+    waterSource: Joi.string().allow("").optional().messages({
       "string.base": "Water Source must be a string.",
     }),
-    status: Joi.string().optional().messages({
-      "string.base": "Status must be a string.",
-    }),
   });
+
+  useEffect(() => {
+    fetchLands();
+  }, []);
+
+  const fetchLands = async () => {
+    try {
+      const response = await api.get("/api/Land/GetAllLands");
+      setLands(response.data);
+    } catch (error) {
+      console.error("Error fetching lands:", error.message, error);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleLocationSelect = (location) => {
-    setFormData({
-      ...formData,
-      latitude: location.geometry.lat,
-      longitude: location.geometry.lng,
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { error } = schema.validate(formData, { abortEarly: false });
+    const { id, ...dataToValidate } = formData;
+    const { error } = schema.validate(dataToValidate, { abortEarly: false });
 
     if (error) {
       const newErrors = {};
@@ -139,30 +147,26 @@ export default function LandFormPage() {
       return;
     }
 
-    // Map frontend fields to backend fields
     const mappedData = {
-      Id: formData.id,
-      Name: formData.landName,
-      AreaSize: parseFloat(formData.size),
+      LandName: formData.landName,
+      Size: parseFloat(formData.size),
       SoilType: formData.soilType,
       IrrigationType: formData.irrigationType,
-      StartDate: formData.startDate,
-      Latitude: parseFloat(formData.latitude),
-      Longitude: parseFloat(formData.longitude),
+      Location: formData.location,
       PictureUrl: formData.pictureUrl,
-
       waterSource: formData.waterSource,
     };
+    if (formData.id) mappedData.Id = formData.id;
 
     try {
       if (formData.id) {
-        console.log("Updating land:", mappedData);
-        const res = await api.put(`/land/${formData.id}`, mappedData);
-        console.log("UpdateLand response:", res);
+        await api.put(`/api/Land/UpdateLandById/${formData.id}`, mappedData);
       } else {
-        console.log("Adding new land:", mappedData);
-        const res = await api.post("/land/AddLand", mappedData);
-        console.log("AddLand response:", res);
+        await api.post("api/Land/AddLand", mappedData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       }
 
       setFormData({
@@ -171,99 +175,115 @@ export default function LandFormPage() {
         size: "",
         soilType: "",
         irrigationType: "",
-        startDate: "",
-        latitude: "",
-        longitude: "",
+        location: "",
         pictureUrl: "",
-        weatherCondition: "",
         waterSource: "",
-        status: "",
       });
-      setErrors({}); // Clear errors after successful save
-      await fetchLands(); // Ensure sidebar is always up-to-date
+      setErrors({});
+      fetchLands();
       alert("Land saved successfully!");
     } catch (err) {
-      alert("Error saving land");
-      console.error("Error in handleSubmit:", err);
+      console.error("Error saving land:", err);
+      alert(`Error saving land: ${err.response?.data?.message || err.message}`);
     }
   };
 
   const handleEdit = (land) => {
-    setFormData({ ...land });
+    setFormData({
+      id: land.id || land.Id || null,
+      landName: land.LandName || "",
+      size: land.Size?.toString() || "",
+      soilType: land.SoilType || "",
+      irrigationType: land.IrrigationType || "",
+      location: land.Location || "",
+      pictureUrl: land.PictureUrl || "",
+      waterSource: land.waterSource || "",
+    });
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this land?")) return;
-    try {
-      await api.delete(`/land/${id}`);
-      await fetchLands();
+  const handleDelete = (id) => {
+    setModalAction("delete");
+    setSelectedLandId(id);
+    setShowModal(true);
+  };
 
+  const confirmDelete = async () => {
+    try {
+      await api.delete(`/api/Land/DeletLand/${selectedLandId}`);
+      fetchLands();
+      setShowModal(false);
       alert("Land deleted successfully.");
-      if (formData.id === id) {
-        setFormData({
-          id: null,
-          landName: "",
-          size: "",
-          soilType: "",
-          irrigationType: "",
-          startDate: "",
-          latitude: "",
-          longitude: "",
-          pictureUrl: "",
-          weatherCondition: "",
-          waterSource: "",
-          status: "",
-        });
-      }
     } catch (error) {
       alert("Error deleting land.");
-      console.error(error);
     }
   };
 
+  const handleStartPlantingButton = (land) => {
+    setSelectedLand(land); // Set the full land data
+    setSelectedLandId(land.Id); // Set the ID correctly
+
+    setModalAction("plant");
+    setShowModal(true);
+  };
+
+  const goToRecommendation = () => {
+    setShowModal(false);
+    navigate(`/RecommendPlan`);
+    // navigate(`/RecommendPlan/${selectedLandId}`);
+  };
+
+  const goToSpecifyPlant = () => {
+    setShowModal(false);
+    navigate(`/specifyPlant/${selectedLandId}`);
+  };
+
   return (
-    <div className="container-fluid px-0">
+    <div className="container-fluid">
       <div className="row g-0">
         {/* Sidebar - flush left, no space */}
-        <div
-          className="col-lg-2 col-md-4 col-12 px-0"
-          style={{
-            minHeight: "100vh",
-            background: "#f8f9fa",
-            borderRight: "1px solid #e0e0e0",
-          }}
-        >
-          <div className="p-4 h-100">
-            <h2 className="fs-5 fw-bold mb-4 text-success">My Lands</h2>
+        <div className="col-lg-3 col-md-4 col-12 bg-light p-3 border-end">
+          <div className="p-2 h-100 ">
+            <h2 className="fs-3 fw-bolder mb-4 text-success text-center">
+              My Lands
+            </h2>
             {lands.length === 0 ? (
               <p className="text-muted">No lands added yet.</p>
             ) : (
               <ul className="list-unstyled">
                 {lands.map((land) => (
                   <li
-                    key={land.id || land.Id}
-                    className="bg-white p-3 mb-3 rounded d-flex justify-content-between align-items-center shadow-sm"
+                    key={land.Id}
+                    className="bg-white p-3 mb-3  rounded d-flex justify-content-between align-items-center shadow-sm"
                   >
                     <div>
                       <div className="fw-semibold text-success">
-                        {land.Name || land.landName}
+                        {land.LandName}
                       </div>
                       <div className="text-secondary small">
-                        {land.AreaSize || land.size}
+                        {land.Location}
+                      </div>
+                      <div className="text-secondary small">
+                        <p>Size: {land.Size}</p>
                       </div>
                     </div>
-                    <div className="d-flex gap-2">
+                    <div className="d-flex gap-2 flex-wrap justify-content-end">
                       <button
                         onClick={() => handleEdit(land)}
-                        className="btn btn-outline-success btn-sm px-3"
+                        className="btn btn-outline-success btn-sm w-100 w-sm-auto"
                       >
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(land.id || land.Id)}
-                        className="btn btn-outline-danger btn-sm px-3"
+                        onClick={() => handleDelete(land.Id)}
+                        className="btn btn-outline-danger btn-sm w-100 w-sm-auto"
                       >
                         Delete
+                      </button>
+                      <button
+                        onClick={() => handleStartPlantingButton(land)}
+                        className="btn btn-outline-primary btn-sm w-100 w-sm-auto"
+                      >
+                        Start planting
                       </button>
                     </div>
                   </li>
@@ -274,16 +294,13 @@ export default function LandFormPage() {
         </div>
 
         {/* Form */}
-        <div className="col-lg-9 col-md-8 col-12 px-0">
-          <div
-            className="bg-white p-4 shadow pe-5"
-            style={{ minHeight: "100vh" }}
-          >
-            <h2 className="fs-4 fw-bold mb-4 text-success">
+        <div className=" my-5 col-lg-8 col-md-8 col-12 d-flex justify-content-center align-items-center">
+          <div className="bg-white ">
+            <h2 className="fs-3 fw-bold mb-4 text-success ">
               {formData.id ? "Update Land" : "Add Land Information"}
             </h2>
             <form onSubmit={handleSubmit} className="row ">
-              <div className="col-md-6">
+              <div className="col-md-7">
                 <label className="form-label fw-semibold">Land Name</label>
                 <input
                   type="text"
@@ -297,7 +314,7 @@ export default function LandFormPage() {
                   <div className="text-danger small">{errors.landName}</div>
                 )}
               </div>
-              <div className="col-md-6">
+              <div className="col-md-7">
                 <label className="form-label fw-semibold">Land Size</label>
                 <input
                   type="text"
@@ -311,7 +328,7 @@ export default function LandFormPage() {
                   <div className="text-danger small">{errors.size}</div>
                 )}
               </div>
-              <div className="col-md-6">
+              <div className="col-md-7">
                 <label className="form-label fw-semibold">Soil Type</label>
                 <select
                   name="soilType"
@@ -330,7 +347,7 @@ export default function LandFormPage() {
                   <div className="text-danger small">{errors.soilType}</div>
                 )}
               </div>
-              <div className="col-md-6">
+              <div className="col-md-7">
                 <label className="form-label fw-semibold">
                   Irrigation Type
                 </label>
@@ -353,33 +370,29 @@ export default function LandFormPage() {
                   </div>
                 )}
               </div>
-              {/* <div className="col-md-6">
-                <label className="form-label fw-semibold">Start Date</label>
-                <input
-                  type="date"
-                  name="startDate"
-                  value={formData.startDate}
+
+              {/* Governorate */}
+              <div className="col-md-7">
+                <label className="form-label fw-semibold">Location</label>
+                <select
+                  name="location"
+                  value={formData.location}
                   onChange={handleChange}
-                  className="form-control"
-                />
-                {errors.startDate && (
-                  <div className="text-danger small">{errors.startDate}</div>
-                )}
-              </div> */}
-              <div className="col-md-6">
-                <label className="form-label fw-semibold">
-                  Search Location
-                </label>
-                <LocationSearch onLocationSelect={handleLocationSelect} />
-                {errors.latitude && (
-                  <div className="text-danger small">{errors.latitude}</div>
-                )}
-                {errors.longitude && (
-                  <div className="text-danger small">{errors.longitude}</div>
+                  className="form-select"
+                >
+                  <option value="">-- Select location --</option>
+                  {governorates.map((gov, index) => (
+                    <option key={index} value={gov}>
+                      {gov}
+                    </option>
+                  ))}
+                </select>
+                {errors.location && (
+                  <div className="text-danger small">{errors.location}</div>
                 )}
               </div>
 
-              <div className="col-md-4">
+              <div className="col-md-7">
                 <label className="form-label fw-semibold">Picture URL</label>
                 <input
                   type="text"
@@ -393,7 +406,7 @@ export default function LandFormPage() {
                   <div className="text-danger small">{errors.pictureUrl}</div>
                 )}
               </div>
-              <div className="col-md-6">
+              <div className="col-md-7">
                 <label className="form-label fw-semibold">Water Source</label>
                 <input
                   type="text"
@@ -404,23 +417,91 @@ export default function LandFormPage() {
                   className="form-control"
                 />
               </div>
-              <div className=" text-end mt-3">
+
+              <div className="col-5 text-end mt-5 ">
                 <button
                   type="submit"
                   className="btn btn-success me-5 fw-bold shadow-sm"
                   style={{
-                    borderRadius: 8,
+                    borderRadius: 10,
                     fontSize: 17,
                     letterSpacing: 0.5,
+                    width: 200,
                   }}
                 >
-                  Save
+                  {formData.id ? "Save Changes" : "Save"}
                 </button>
               </div>
             </form>
           </div>
         </div>
       </div>
+
+      {showModal && (
+        <div className="modal fade show" style={{ display: "block" }}>
+          <div className="modal-dialog ">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title text-success">
+                  {modalAction === "delete"
+                    ? "Confirm Delete"
+                    : "Planting Options"}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                {modalAction === "delete" && (
+                  <p>Are you sure you want to delete this land?</p>
+                )}
+                {modalAction === "plant" && (
+                  <>
+                    <p>
+                      What would you like to do on{" "}
+                      <strong>{selectedLand?.LandName}</strong>?
+                    </p>
+                    <div className="d-flex flex-column gap-2 mt-3">
+                      <button
+                        className="btn btn-outline-primary"
+                        onClick={goToRecommendation}
+                      >
+                        🌱 Get Plant Recommendation
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary"
+                        onClick={goToSpecifyPlant}
+                      >
+                        🧑‍🌾 Specify Plant to Grow
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+              {modalAction === "delete" && (
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={confirmDelete}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

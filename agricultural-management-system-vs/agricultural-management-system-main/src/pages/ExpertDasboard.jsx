@@ -66,7 +66,7 @@ const ExpertDashboard = () => {
   // Fetch crops from backend on mount
   useEffect(() => {
     api
-      .get("/api/Crop/GetAllCrops") // Updated to use shared api instance and correct baseURL
+      .get("/api/Crop/GetCrops") // Updated to use shared api instance and correct baseURL
       .then((res) => {
         setCrops(res.data);
         console.log("Fetched crops:", res.data); // Log crops for debugging
@@ -347,10 +347,7 @@ const ExpertDashboard = () => {
               >
                 Cancel
               </Button>
-              <Button
-                onClick={handleConfirmUpdate}
-                color="success"
-              >
+              <Button onClick={handleConfirmUpdate} color="success">
                 Confirm
               </Button>
             </DialogActions>
@@ -413,6 +410,27 @@ const ExpertDashboard = () => {
                 style={{ width: "150px", height: "150px", objectFit: "cover" }}
               />
             )}
+
+            <label className="fw-bold mt-2">Start date:</label>
+            <input
+              type="date"
+              className="form-control w-50"
+              placeholder="Start Date"
+            />
+
+            <label className="fw-bold mt-2">Last start date:</label>
+            <input
+              type="date"
+              className="form-control w-50"
+              placeholder="Last Start Date"
+            />
+
+            <label className="fw-bold mt-2">Duration for planting:</label>
+            <input
+              type="number"
+              className="form-control w-50"
+              placeholder="Duration (Days)"
+            />
           </div>
 
           {/* Stages */}
@@ -433,83 +451,85 @@ const ExpertDashboard = () => {
                   </option>
                 ))}
               </select>
-           
 
-{stage.steps.map((step, stepIndex) => (
-  <div key={stepIndex} className="mt-2 border p-2">
-    <input
-      type="text"
-      className="form-control mt-2 w-50"
-      placeholder="Step Name"
-      value={step.stepName || ""}
-      onChange={(e) =>
-        handleStepChange(index, stepIndex, "stepName", e.target.value)
-      }
-    />
-    <input
-      type="text"
-      className="form-control mt-2 w-50"
-      placeholder="Optional Link"
-      value={stage.link}
-      onChange={(e) =>
-        handleStageChange(index, "link", e.target.value)
-      }
-    />
+              {stage.steps.map((step, stepIndex) => (
+                <div key={stepIndex} className="mt-2 border p-2">
+                  <input
+                    type="text"
+                    className="form-control mt-2 w-50"
+                    placeholder="Step Name"
+                    value={step.stepName || ""}
+                    onChange={(e) =>
+                      handleStepChange(
+                        index,
+                        stepIndex,
+                        "stepName",
+                        e.target.value
+                      )
+                    }
+                  />
+                  <input
+                    type="text"
+                    className="form-control mt-2 w-50"
+                    placeholder="Optional Link"
+                    value={stage.link}
+                    onChange={(e) =>
+                      handleStageChange(index, "link", e.target.value)
+                    }
+                  />
 
-  
+                  {/* Tools and Duration */}
+                  <div className="d-flex mt-2">
+                    <select
+                      className="form-control me-2 w-25"
+                      value={step.tool}
+                      onChange={(e) =>
+                        handleStepChange(
+                          index,
+                          stepIndex,
+                          "tool",
+                          e.target.value
+                        )
+                      }
+                    >
+                      <option value="">Select Tool</option>
+                      {toolsList.map((tool, i) => (
+                        <option key={i} value={tool}>
+                          {tool}
+                        </option>
+                      ))}
+                    </select>
 
-    {/* Tools and Duration */}
-    <div className="d-flex mt-2">
-      <select
-        className="form-control me-2 w-25"
-        value={step.tool}
-        onChange={(e) =>
-          handleStepChange(
-            index,
-            stepIndex,
-            "tool",
-            e.target.value
-          )
-        }
-      >
-        <option value="">Select Tool</option>
-        {toolsList.map((tool, i) => (
-          <option key={i} value={tool}>
-            {tool}
-          </option>
-        ))}
-      </select>
+                    <input
+                      type="text"
+                      className="form-control w-25 me-2"
+                      placeholder="Tool Image URL"
+                      value={step.toolImage}
+                      onChange={(e) =>
+                        handleStepChange(
+                          index,
+                          stepIndex,
+                          "toolImage",
+                          e.target.value
+                        )
+                      }
+                    />
 
-      <input
-        type="text"
-        className="form-control w-25 me-2"
-        placeholder="Tool Image URL"
-        value={step.toolImage}
-        onChange={(e) =>
-          handleStepChange(
-            index,
-            stepIndex,
-            "toolImage",
-            e.target.value
-          )
-        }
-      />
-
-      <input
-        type="number"
-        className="form-control w-25"
-        placeholder="Duration (Days)"
-        value={step.durationDays}
-        onChange={(e) =>
-          handleStepChange(
-            index,
-            stepIndex,
-            "durationDays",
-            e.target.value
-          )
-        }
-      />
-    </div>
+                    <input
+                      type="number"
+                      className="form-control w-25"
+                      placeholder="Duration (Days)"
+                      value={step.durationDays}
+                      onChange={(e) =>
+                        handleStepChange(
+                          index,
+                          stepIndex,
+                          "durationDays",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
 
                   {/* Fertilizer, Duration and Cost in one row */}
                   <div className="d-flex mt-2 align-items-center">
