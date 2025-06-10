@@ -10,45 +10,51 @@ import {
   Button,
 } from "@mui/material";
 
-const cropList = [
-  "Wheat",
-  "Barley",
-  "Maize (Corn)",
-  "Rice",
-  "Soybeans",
-  "Potatoes",
-  "Tomatoes",
-  "Carrots",
-  "Onions",
-  "Strawberries",
-  "Other",
-];
-const cropStagesList = [
-  "Soil Preparation",
-  "Seed Selection",
-  "Germination",
-  "Seedling Stage",
-  "Vegetative Growth",
-  "Bud Formation",
-  "Flowering",
-  "Pollination",
-  "Fruit Development",
-  "Maturity & Ripening",
-  "Harvesting",
-  "Post-Harvest Handling",
-];
+const FarmerPlan = () => {
+  const cropList = [
+    "Wheat",
+    "Barley",
+    "Maize (Corn)",
+    "Rice",
+    "Soybeans",
+    "Potatoes",
+    "Tomatoes",
+    "Carrots",
+    "Onions",
+    "Strawberries",
+    "Other",
+  ];
+  const cropStagesList = [
+    "Soil Preparation",
+    "Seed Selection",
+    "Germination",
+    "Seedling Stage",
+    "Vegetative Growth",
+    "Bud Formation",
+    "Flowering",
+    "Pollination",
+    "Fruit Development",
+    "Maturity & Ripening",
+    "Harvesting",
+    "Post-Harvest Handling",
+  ];
 
-const toolsList = [
-  "Tractor",
-  "Plow",
-  "Irrigation System",
-  "Hoe",
-  "Seeder",
-  "Other",
-];
-const fertilizersList = ["Compost", "Urea", "Phosphate", "Potassium", "Other"];
+  const toolsList = [
+    "Tractor",
+    "Plow",
+    "Irrigation System",
+    "Hoe",
+    "Seeder",
+    "Other",
+  ];
+  const fertilizersList = [
+    "Compost",
+    "Urea",
+    "Phosphate",
+    "Potassium",
+    "Other",
+  ];
 
-const ExpertDashboard = () => {
   const [cropName, setCropName] = useState("");
   const [customCrop, setCustomCrop] = useState("");
   const [stages, setStages] = useState([]);
@@ -329,15 +335,18 @@ const ExpertDashboard = () => {
 
   return (
     <div>
-      <h2 className="text-center mt-4 text-success">Expert Dashboard</h2>
+      <h2 className="text-center mt-4 text-success">Farmer Plan</h2>
       <div className="d-flex">
         {/* Sidebar */}
         <div
-          className="sidebar p-2 border-end"
-          style={{ width: "250px", background: "#f8f9fa" }}
+          className="sidebar p-3 border-end bg-light"
+          style={{ width: 250, minHeight: "100vh", position: "sticky", top: 0 }}
         >
           <h5>Added Crops</h5>
-          <ul className="list-group">
+          <ul
+            className="list-group"
+            style={{ maxHeight: "80vh", overflowY: "auto" }}
+          >
             {crops.map((crop, index) => {
               // Support all possible ID property names
               const cropId =
@@ -350,45 +359,54 @@ const ExpertDashboard = () => {
                 <li
                   key={cropId}
                   className="list-group-item d-flex justify-content-between align-items-center"
+                  style={{ wordBreak: "break-word" }}
                 >
-                  <span>
+                  <span
+                    style={{
+                      maxWidth: 120,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "inline-block",
+                    }}
+                  >
                     {crop.cropName ||
                       crop.name ||
                       crop.CropName ||
                       crop.Name ||
                       "Unnamed Crop"}
                   </span>
-                  <button
-                    className="btn btn-sm btn-primary me-1"
-                    onClick={(e) =>
-                      handleOpenUpdateDialog(
-                        String(
-                          crop.id ?? crop.cropId ?? crop.Id ?? crop.CropId
-                        ),
-                        e
-                      )
-                    }
-                  >
-                    Update
-                  </button>
-                  <button
-                    className="btn btn-sm btn-danger"
-                    onClick={(e) =>
-                      handleOpenDeleteDialog(
-                        String(
-                          crop.id ?? crop.cropId ?? crop.Id ?? crop.CropId
-                        ),
-                        e
-                      )
-                    }
-                  >
-                    Delete
-                  </button>
+                  <div className="d-flex flex-column gap-1">
+                    <button
+                      className="btn btn-sm btn-primary"
+                      onClick={(e) =>
+                        handleOpenUpdateDialog(
+                          String(
+                            crop.id ?? crop.cropId ?? crop.Id ?? crop.CropId
+                          ),
+                          e
+                        )
+                      }
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="btn btn-sm btn-danger"
+                      onClick={(e) =>
+                        handleOpenDeleteDialog(
+                          String(
+                            crop.id ?? crop.cropId ?? crop.Id ?? crop.CropId
+                          ),
+                          e
+                        )
+                      }
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </li>
               );
             })}
           </ul>
-
           {/* Delete Confirmation Dialog */}
           <Dialog
             open={openDeleteDialog}
@@ -413,9 +431,8 @@ const ExpertDashboard = () => {
             </DialogActions>
           </Dialog>
         </div>
-
         {/* Main Content */}
-        <div className="container mt-2">
+        <div className="container mt-2 flex-grow-1">
           {successMessage && (
             <div className="alert alert-success">{successMessage}</div>
           )}
@@ -511,6 +528,28 @@ const ExpertDashboard = () => {
                   </option>
                 ))}
               </select>
+
+              {/* Estimated and Actual Cost fields for each stage */}
+              <div className="d-flex gap-2 mt-2">
+                <input
+                  type="number"
+                  className="form-control w-25"
+                  placeholder="Estimated Cost"
+                  value={stage.estimatedCost || ""}
+                  onChange={(e) =>
+                    handleStageChange(index, "estimatedCost", e.target.value)
+                  }
+                />
+                <input
+                  type="number"
+                  className="form-control w-25"
+                  placeholder="Actual Cost"
+                  value={stage.actualCost || ""}
+                  onChange={(e) =>
+                    handleStageChange(index, "actualCost", e.target.value)
+                  }
+                />
+              </div>
 
               {stage.steps.map((step, stepIndex) => (
                 <div key={stepIndex} className="mt-2 border p-2">
@@ -710,4 +749,4 @@ const ExpertDashboard = () => {
   );
 };
 
-export default ExpertDashboard;
+export default FarmerPlan;

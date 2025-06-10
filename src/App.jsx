@@ -38,7 +38,10 @@ import ShopChemicals from "./pages/ShopChemicals";
 import Insecticides from "./pages/insecticides.JSX";
 import ShopByCategory from "./pages/ShopByCategory";
 import RecommendPlan from "./pages/RecommendPlan";
-import PlanProgress from './pages/PlanPrograss';
+import PlanProgress from "./pages/PlanProgress";
+import FarmerPlan from "./pages/FarmerPlan";
+import ViewMyPlans from "./pages/ViewMyPlans";
+
 function App() {
   const [order, setOrder] = useState(null);
   return (
@@ -67,15 +70,16 @@ function App() {
         <Route path="/animal-husbandry" element={<AnimalHusbandry />} />
         <Route path="/expert-dashboard" element={<Dashboard />} />
         <Route path="/add-land" element={<LandFormPage />} />
-        <Route path="/RecommendPlan" element={<RecommendPlan/>} />
+        <Route path="/RecommendPlan" element={<RecommendPlan />} />
         <Route path="/shopChemicals" element={<ShopChemicals />} />
+        <Route path="/FarmerPlan" element={<FarmerPlan />} />
+        <Route path="/ViewMyPlans" element={<ViewMyPlans/>} />
         <Route path="/category/featured" element={<FeaturedProducts />} />
         <Route path="/category/fertilizers" element={<Fertilizers />} />
         <Route path="/category/organic" element={<OrganicPesticides />} />
         <Route path="/category/herbicides" element={<Herbicides />} />
         <Route path="/category/insecticides" element={<Insecticides />} />
         <Route path="/plan-progress/:planId" element={<PlanProgress />} />
-
       </Routes>
       <Footer />
     </Router>

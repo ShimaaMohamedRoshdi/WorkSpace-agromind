@@ -56,10 +56,10 @@ import image107 from "./insecticides/1699792003كاجورا.png";
 import image108 from "./productsimgs/Beans Green - فاصوليا خضراء.jpeg";
 import image109 from "./productsimgs/Blueberry - توت بري.jpeg";
 import image110 from "./productsimgs/Capsicum Yellow - فليفلة صفرا.jpg";
-/* import image111 from "./productsimgs/Coconut Fresh Whole - جوز هند حبة كامل.webp"; */
+import image111 from "./productsimgs/Coconut Fresh Whole - جوز هند حبة كامل.webp";
 import image112 from "./productsimgs/Colored Capsicum - فيلفلة ملونة.webp";
 import image113 from "./productsimgs/Coriander -كزبرة.webp";
-/* import image114 from "./productsimgs/Grape Leaves Green Fresh ورق عنب اخضر.webp"; */
+import image114 from "./productsimgs/Grape Leaves Green Fresh ورق عنب اخضر.webp";
 import image115 from "./productsimgs/Guava - جوافة.webp";
 import image116 from "./productsimgs/Iceberg Lettuce - خس مدور.webp";
 import image117 from "./productsimgs/Kiwi Iranian - كيوي.webp";
@@ -457,14 +457,14 @@ export const mockData2 = [
     description: "Bright yellow capsicum, great for salads and cooking.",
     category: "Vegetable",
   },
-/*   {
+  {
     id: 69,
     image: image111,
     name: "Coconut Fresh Whole",
     price: 150,
     description: "Fresh whole coconut, perfect for cooking and drinking.",
     category: "Fruit",
-  }, */
+  },
   {
     id: 70,
     image: image112,
@@ -481,14 +481,14 @@ export const mockData2 = [
     description: "Fresh coriander leaves, used as a herb and garnish.",
     category: "Herb",
   },
-/*   {
+  {
     id: 72,
     image: image114,
     name: "Grape Leaves Green Fresh",
     price: 55,
     description: "Fresh green grape leaves, used in cooking and wraps.",
     category: "Vegetable",
-  }, */
+  },
   {
     id: 73,
     image: image115,

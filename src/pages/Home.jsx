@@ -18,6 +18,12 @@ function Home() {
   const handleClick2 = () => {
     navigate("/RecommendPlan");
   };
+   const handleClick3 = () => {
+    navigate("/FarmerPlan");
+  };
+  const handleClick4 = () => {
+    navigate("/ViewMyPlans");
+  };
 
   return (
     <div>
@@ -51,6 +57,12 @@ function Home() {
 
           <button className="hero-button " onClick={handleClick2}>
             Recommend Plan <span className="arrow">➝</span>
+          </button>
+          <button className="hero-button mt-3" onClick={handleClick3}>
+            Farmer Plan  <span className="arrow">➝</span>
+          </button>
+          <button className="hero-button mt-3 " onClick={handleClick4}>
+            View My Plans  <span className="arrow">➝</span>
           </button>
         </div>
 
