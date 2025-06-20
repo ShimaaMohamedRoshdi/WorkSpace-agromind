@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import HealthyFoods from "../components/HealthyFoods";
 import Products from "../components/Products";
 import "./Home.css";
@@ -8,20 +9,30 @@ import FarmerSection from "../components/FarmerSection";
 import HealthyLifeSection from "../components/HealthyLifeSection";
 import OrganicSection from "../components/OrganicSection";
 import Categories from "../components/Categories";
-import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
-  const handleClick = () => {
+
+  // State to track if the user is logged in. This is still needed
+  // for the buttons that are part of the Home page itself.
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // This hook runs once when the component loads to check the login status.
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  // Navigation handlers for the buttons
+  const handleMyLandsClick = () => {
     navigate("/add-land");
   };
-  const handleClick2 = () => {
-    navigate("/RecommendPlan");
-  };
-   const handleClick3 = () => {
-    navigate("/FarmerPlan");
-  };
-  const handleClick4 = () => {
+
+  const handleViewMyPlansClick = () => {
     navigate("/ViewMyPlans");
   };
 
@@ -51,26 +62,33 @@ function Home() {
             recent decades has been that everything depends on innovation.
           </p>
 
-          <button className="hero-button mb-3" onClick={handleClick}>
-            Start Planting Now <span className="arrow">➝</span>
-          </button>
-
-          <button className="hero-button " onClick={handleClick2}>
-            Recommend Plan <span className="arrow">➝</span>
-          </button>
-          <button className="hero-button mt-3" onClick={handleClick3}>
-            Farmer Plan  <span className="arrow">➝</span>
-          </button>
-          <button className="hero-button mt-3 " onClick={handleClick4}>
-            View My Plans  <span className="arrow">➝</span>
-          </button>
+          {/* Buttons conditionally rendered based on login status */}
+          {isLoggedIn && (
+            <div
+              className="d-flex flex-column flex-sm-row gap-3 mt-4 w-100"
+              style={{ maxWidth: "500px" }}
+            >
+              <button
+                className="btn btn-light btn-lg w-100 d-flex justify-content-center align-items-center"
+                onClick={handleMyLandsClick}
+              >
+                My Lands <span className="ms-2">➝</span>
+              </button>
+              <button
+                className="btn btn-warning btn-lg w-100 d-flex justify-content-center align-items-center"
+                onClick={handleViewMyPlansClick}
+              >
+                View My Plans <span className="ms-2">➝</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Yellow Grass Bottom Wave */}
         <div className="grass-wave"></div>
       </div>
 
-      {/* Other Sections */}
+      {/* All other sections of your Home page */}
       <AgricultureSkill />
       <HeroSection />
       <hr />
@@ -80,7 +98,7 @@ function Home() {
       <HealthyFoods />
       <HealthyLifeSection />
       <OrganicSection />
-
+      
       {/* <Products /> */}
     </div>
   );

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import * as Yup from "yup";
 import { FaFacebook, FaTwitter, FaGoogle, FaInstagram } from "react-icons/fa";
 import api from "../../services/api";
+import {jwtDecode} from "jwt-decode"; // ✅ NEW: Import jwt-decode
 import "../App.css";
 import logo from "../assets/images/logo.png"; // Adjust the path to your logo
 import "./Signup.css";
@@ -22,8 +23,8 @@ const Signin = () => {
   }, []);
 
   const validationSchema = Yup.object({
-    email: Yup.string().required("email is required"),
-    password: Yup.string()
+email: Yup.string().email("Invalid email format").required("Email is required"), // Added email validation   
+ password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .required("Password is required"),
   });
@@ -36,11 +37,37 @@ const Signin = () => {
       });
 
       if (response.status === 200) {
-        // You can store token or user data if returned
-        localStorage.setItem("token", response.data.token);
+        const token = response.data.token;
 
-        // Navigate to user page on success
-        navigate("/");
+        // ✅ Decode the token to get user role and id
+        console.log(" token:", token);
+        const decoded = jwtDecode(token);
+        console.log("Decoded user data:", decoded);
+        // const userId = decoded.id;
+        // const userRole = decoded.role;
+// ✅ Extract user ID and role
+      const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+      const roles = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      const userRole = Array.isArray(roles) ? roles[0] : roles; // use first role if array
+        // ✅ Store token and userId
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("userRole", userRole);
+
+        // ✅ Navigate based on role
+        switch (userRole) {
+          case "Farmer":
+            navigate("/");
+            break;
+          case "AgriculturalExpert":
+            navigate("/expert-dashboard");
+            break;
+          // case "SystemAdministrator":
+          //   navigate("/admin-dashboard");
+          //   break;
+          // default:
+          //   navigate("/");
+        }
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {

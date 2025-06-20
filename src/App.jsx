@@ -51,6 +51,7 @@ function App() {
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/Account/Login" element={<SignIn />} />
         <Route path="/forget-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/home" element={<Home />} />
@@ -73,6 +74,7 @@ function App() {
         <Route path="/RecommendPlan" element={<RecommendPlan />} />
         <Route path="/shopChemicals" element={<ShopChemicals />} />
         <Route path="/FarmerPlan" element={<FarmerPlan />} />
+        <Route path="/create-plan" element={<FarmerPlan />} />
         <Route path="/ViewMyPlans" element={<ViewMyPlans/>} />
         <Route path="/category/featured" element={<FeaturedProducts />} />
         <Route path="/category/fertilizers" element={<Fertilizers />} />

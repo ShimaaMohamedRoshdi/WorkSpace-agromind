@@ -120,15 +120,41 @@ export default function LandFormPage() {
     fetchLands();
   }, []);
 
+  // In LandFormPage.jsx
+
   const fetchLands = async () => {
+    // Get the token from localStorage to authorize the request
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found, cannot fetch user's lands.");
+      // Optionally, you could redirect to login here
+      // navigate('/signin');
+      return;
+    }
+
     try {
-      const response = await api.get("/api/Land/GetAllLands");
+      // CHANGED: This endpoint now correctly gets ONLY the lands for the logged-in user.
+      const response = await api.get("/api/Land/GetMyLands", {
+        headers: {
+          // ADDED: The secure endpoint requires the token to be sent.
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setLands(response.data);
     } catch (error) {
-      console.error("Error fetching lands:", error.message, error);
+      console.error("Error fetching my lands:", error);
+      // Handle potential auth errors if the token is expired
+      if (
+        error.response &&
+        (error.response.status === 401 || error.response.status === 403)
+      ) {
+        alert(
+          "Your session may have expired. Please log in again to see your lands."
+        );
+        // navigate('/signin');
+      }
     }
   };
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -155,6 +181,7 @@ export default function LandFormPage() {
       Location: formData.location,
       PictureUrl: formData.pictureUrl,
       waterSource: formData.waterSource,
+      FarmerId: localStorage.getItem("userId"),
     };
     if (formData.id) mappedData.Id = formData.id;
 
@@ -209,7 +236,11 @@ export default function LandFormPage() {
 
   const confirmDelete = async () => {
     try {
-      await api.delete(`/api/Land/DeletLand/${selectedLandId}`);
+      await api.delete(`/api/Land/DeletLand/${selectedLandId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchLands();
       setShowModal(false);
       alert("Land deleted successfully.");
@@ -228,13 +259,15 @@ export default function LandFormPage() {
 
   const goToRecommendation = () => {
     setShowModal(false);
+    localStorage.setItem("landId", selectedLandId);
     navigate(`/RecommendPlan`);
     // navigate(`/RecommendPlan/${selectedLandId}`);
   };
 
-  const goToSpecifyPlant = () => {
+  const goToSpecifyPlant = (land) => {
     setShowModal(false);
-    navigate(`/specifyPlant/${selectedLandId}`);
+    navigate(`/create-plan?landId=${selectedLandId}`); 
+    // localStorage.setItem("landId", selectedLandId);
   };
 
   return (
