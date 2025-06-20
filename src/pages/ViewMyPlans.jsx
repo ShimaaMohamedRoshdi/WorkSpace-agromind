@@ -1,275 +1,139 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/api";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Typography,
-  TextField,
   Box,
   Grid,
   Paper,
   Divider,
   Button,
+  CircularProgress,
+  Chip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { getMyPlans, getPlanInfo } from "../api";
 
 const ViewMyPlans = () => {
+  const navigate = useNavigate(); // Initialize for navigation
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [expanded, setExpanded] = useState(false);
-  const [stepUpdates, setStepUpdates] = useState({}); // { planId: { stageIdx: { stepIdx: { actualCost, actualDate } } } }
+  const [expandedPlanId, setExpandedPlanId] = useState(null);
 
   useEffect(() => {
-    api
-      .get("/api/Crop/GetCrops")
-      .then((res) => {
-        setPlans(res.data || []);
-        setLoading(false);
+    getMyPlans()
+      .then((data) => {
+        const initialPlans = (data || []).map(plan => ({
+          ...plan,
+          details: null,
+          isLoadingDetails: false,
+          error: null,
+        }));
+        setPlans(initialPlans);
       })
       .catch((err) => {
-        setError("Failed to fetch plans");
+        console.error("Failed to fetch plans:", err);
+        setError("Failed to fetch plans. Please try logging in again.");
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, []);
 
-  const handleExpand = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const handleExpand = (planId) => (event, isExpanded) => {
+    const newExpandedId = isExpanded ? planId : null;
+    setExpandedPlanId(newExpandedId);
 
-  const handleStepUpdate = (planId, stageIdx, stepIdx, field, value) => {
-    setStepUpdates((prev) => ({
-      ...prev,
-      [planId]: {
-        ...(prev[planId] || {}),
-        [stageIdx]: {
-          ...((prev[planId] || {})[stageIdx] || {}),
-          [stepIdx]: {
-            ...(((prev[planId] || {})[stageIdx] || {})[stepIdx] || {}),
-            [field]: value,
-          },
-        },
-      },
-    }));
-  };
-
-  const handleCancel = (planId) => {
-    setStepUpdates((prev) => {
-      const newUpdates = { ...prev };
-      delete newUpdates[planId];
-      return newUpdates;
-    });
-    setPlans((prev) =>
-      prev.filter((plan) => (plan.id || plan.Id || plan.CropId) !== planId)
-    );
-    setExpanded(false); // Collapse the expanded plan when cancel is clicked
-  };
-
-  const handleApplyPlan = async (planId) => {
-    try {
-      const updates = stepUpdates[planId];
-      if (!updates) return;
-
-      const payload = [];
-
-      Object.entries(updates).forEach(([stageIdx, steps]) => {
-        Object.entries(steps).forEach(([stepIdx, stepData]) => {
-          payload.push({
-            planId,
-            stageIdx: Number(stageIdx),
-            stepIdx: Number(stepIdx),
-            actualCost: parseFloat(stepData.actualCost) || 0,
-            actualDate: stepData.actualDate || null,
+    if (isExpanded) {
+      const planIndex = plans.findIndex(p => (p.Id || p.id) === planId);
+      if (planIndex !== -1 && !plans[planIndex].details && !plans[planIndex].isLoadingDetails) {
+        setPlans(prev => prev.map(p => (p.Id || p.id) === planId ? { ...p, isLoadingDetails: true } : p));
+        
+        getPlanInfo(planId)
+          .then(details => {
+            setPlans(prev => prev.map(p => (p.Id || p.id) === planId ? { ...p, details, isLoadingDetails: false } : p));
+          })
+          .catch(err => {
+            console.error(`Failed to fetch details for plan ${planId}:`, err);
+            setPlans(prev => prev.map(p => (p.Id || p.id) === planId ? { ...p, isLoadingDetails: false, error: "Could not load details." } : p));
           });
-        });
-      });
-
-      // POST to backend (adjust endpoint as needed)
-      //will take it from sara
-
-      
-      await api.post("/api/Crop/SaveActuals", payload);
-
-      alert("Plan updated successfully!");
-    } catch (error) {
-      console.error("Failed to apply plan:", error);
-      alert("Failed to apply plan. Please try again.");
+      }
     }
   };
 
-  if (loading) return <div>Loading plans...</div>;
-  if (error) return <div style={{ color: "red" }}>{error}</div>;
+  // ✅ ADDED: Navigate to the PlanProgress page
+  const handleTrackProgress = (planId) => {
+    navigate(`/plan-progress/${planId}`);
+  };
+
+  if (loading) return <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}><CircularProgress /></Box>;
+  if (error) return <Typography color="error" align="center" sx={{ mt: 4 }}>{error}</Typography>;
 
   return (
-    <Box sx={{ maxWidth: 900, mx: "auto", mt: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        My Crop Plans
+    <Box sx={{ maxWidth: 900, mx: "auto", mt: 4, p: { xs: 1, sm: 2 } }}>
+      <Typography variant="h4" align="center" gutterBottom className="text-success">
+        My Plans
       </Typography>
-      {plans.length === 0 && (
-        <Typography align="center" color="text.secondary">
-          No plans found.
-        </Typography>
-      )}
-      {plans.map((plan) => {
-        const stages = plan.stages || plan.Stages || [];
-        const planId = plan.id || plan.Id || plan.CropId;
+      {plans.length === 0 ? (
+        <Typography align="center" color="text.secondary">You don't have any plans yet.</Typography>
+      ) : (
+        plans.map((plan) => {
+          const planId = plan.Id || plan.id;
+          const planDetails = plan.details;
 
-        let totalEstimated = 0;
-        let totalActual = 0;
-        stages.forEach((stage, stageIdx) => {
-          const steps = stage.steps || stage.Steps || [];
-          let stageEst = 0;
-          let stageAct = 0;
-          steps.forEach((step, stepIdx) => {
-            const est = Number(step.cost || step.Cost || 0);
-            stageEst += est;
-            const act = Number(
-              stepUpdates[planId]?.[stageIdx]?.[stepIdx]?.actualCost || 0
-            );
-            stageAct += act;
-          });
-          totalEstimated += stageEst;
-          totalActual += stageAct;
-        });
-
-        return (
-          <Accordion
-            key={planId}
-            expanded={expanded === planId}
-            onChange={handleExpand(planId)}
-            sx={{ mb: 2 }}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography sx={{ flex: 1, fontWeight: 600 }}>
-                {plan.cropName || plan.CropName || "Unnamed Plan"}
-              </Typography>
-              <Typography color="text.secondary">
-                Est. Total: ${totalEstimated.toFixed(2)} | Actual: $
-                {totalActual > 0 ? totalActual.toFixed(2) : "-"}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {stages.length === 0 ? (
-                <Typography color="text.secondary">No stages.</Typography>
-              ) : (
-                stages.map((stage, stageIdx) => {
-                  const steps = stage.steps || stage.Steps || [];
-                  let stageEst = 0;
-                  let stageAct = 0;
-                  steps.forEach((step, stepIdx) => {
-                    const est = Number(step.cost || step.Cost || 0);
-                    stageEst += est;
-                    const act = Number(
-                      stepUpdates[planId]?.[stageIdx]?.[stepIdx]?.actualCost ||
-                        0
-                    );
-                    stageAct += act;
-                  });
-                  return (
-                    <Paper key={stageIdx} sx={{ p: 2, mb: 2 }} elevation={2}>
-                      <Typography variant="h6" gutterBottom>
-                        Stage {stageIdx + 1}:{" "}
-                        {stage.stageName || stage.StageName || "Unnamed Stage"}
-                      </Typography>
-                      <Typography color="text.secondary" sx={{ mb: 1 }}>
-                        Est. Stage Cost: ${stageEst.toFixed(2)} | Actual: $
-                        {stageAct > 0 ? stageAct.toFixed(2) : "-"}
-                      </Typography>
-                      <Divider sx={{ mb: 2 }} />
-                      {steps.length === 0 ? (
-                        <Typography color="text.secondary">
-                          No steps.
-                        </Typography>
-                      ) : (
+          return (
+            <Accordion key={planId} expanded={expandedPlanId === planId} onChange={handleExpand(planId)} sx={{ mb: 2 }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                  <Typography sx={{ fontWeight: "bold" }}>{plan.CropName || "Unnamed Plan"}</Typography>
+                  {planDetails && (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="body2" color="text.secondary">{planDetails.CreatorEmail}</Typography>
+                      <Chip label={planDetails.CreatorRole} size="small" color="primary" variant="outlined" />
+                    </Box>
+                  )}
+                </Box>
+              </AccordionSummary>
+              <AccordionDetails sx={{ backgroundColor: "#f9f9f9" }}>
+                {plan.isLoadingDetails && <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}><CircularProgress /></Box>}
+                {plan.error && <Typography color="error">{plan.error}</Typography>}
+                {planDetails && (
+                  <>
+                    {(planDetails.Crop.Stages || []).map((stage, stageIdx) => (
+                      <Paper key={stage.Id || stageIdx} sx={{ p: 2, mb: 2 }} elevation={2}>
+                        <Typography variant="h6">{stage.StageName}</Typography>
+                        <Divider sx={{ my: 1 }} />
                         <Grid container spacing={2}>
-                          {steps.map((step, stepIdx) => {
-                            const est = Number(step.cost || step.Cost || 0);
-                            const update =
-                              stepUpdates[planId]?.[stageIdx]?.[stepIdx] || {};
-                            return (
-                              <Grid item xs={12} md={6} key={stepIdx}>
-                                <Paper sx={{ p: 2, mb: 2 }}>
-                                  <Typography fontWeight={600}>
-                                    Step {stepIdx + 1}:{" "}
-                                    {step.stepName ||
-                                      step.StepName ||
-                                      "Unnamed Step"}
-                                  </Typography>
-                                  <Typography color="text.secondary">
-                                    Est. Cost: ${est.toFixed(2)}
-                                  </Typography>
-                                  <TextField
-                                    label="Actual Cost"
-                                    type="number"
-                                    size="small"
-                                    value={update.actualCost || ""}
-                                    onChange={(e) =>
-                                      handleStepUpdate(
-                                        planId,
-                                        stageIdx,
-                                        stepIdx,
-                                        "actualCost",
-                                        e.target.value
-                                      )
-                                    }
-                                    sx={{ mt: 1, mr: 2, width: 120 }}
-                                  />
-                                  <TextField
-                                    label="Actual Completion Date"
-                                    type="date"
-                                    size="small"
-                                    value={update.actualDate || ""}
-                                    onChange={(e) =>
-                                      handleStepUpdate(
-                                        planId,
-                                        stageIdx,
-                                        stepIdx,
-                                        "actualDate",
-                                        e.target.value
-                                      )
-                                    }
-                                    sx={{ mt: 1, width: 180 }}
-                                    InputLabelProps={{ shrink: true }}
-                                  />
-                                </Paper>
-                              </Grid>
-                            );
-                          })}
+                          {(stage.Steps || []).map((step, stepIdx) => (
+                            <Grid item xs={12} md={6} key={step.Id || stepIdx}>
+                              <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
+                                <Typography fontWeight="medium">{step.StepName}</Typography>
+                                <Typography color="text.secondary" variant="body2">
+                                  Est. Cost: ${Number(step.EstimatedCost || 0).toFixed(2)}
+                                </Typography>
+                                {/* ✅ REMOVED: Inputs for actuals are gone */}
+                              </Paper>
+                            </Grid>
+                          ))}
                         </Grid>
-                      )}
-                    </Paper>
-                  );
-                })
-              )}
-              <Divider sx={{ my: 2 }} />
-              <Typography fontWeight={600}>
-                Plan Total Estimated Cost: ${totalEstimated.toFixed(2)}
-              </Typography>
-              <Typography fontWeight={600}>
-                Plan Total Actual Cost:{" "}
-                {totalActual > 0 ? `$${totalActual.toFixed(2)}` : "-"}
-              </Typography>
-              <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={() => handleCancel(planId)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleApplyPlan(planId)}
-                >
-                  Apply Plan
-                </Button>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        );
-      })}
+                      </Paper>
+                    ))}
+                    {/* ✅ CHANGED: "Save Changes" is now "Track Progress" */}
+                    <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+                      <Button variant="contained" color="success" onClick={() => handleTrackProgress(planId)}>
+                        Track or Update Progress
+                      </Button>
+                    </Box>
+                  </>
+                )}
+              </AccordionDetails>
+            </Accordion>
+          );
+        })
+      )}
     </Box>
   );
 };

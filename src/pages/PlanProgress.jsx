@@ -1,389 +1,392 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { Progress } from "../components/Progress ";
+import { useParams, useNavigate } from "react-router-dom";
+import { Progress } from "../components/Progress "; // Your progress bar component
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { getCropById } from "../api";
+import {
+  TextField,
+  Button,
+  Box,
+  CircularProgress,
+  Typography,
+  Snackbar,
+  Alert as MuiAlert,
+  Paper,
+  Divider,
+  Grid,
+} from "@mui/material";
+import { getPlanInfo, updatePlanActuals } from "../api";
+
+// Helper function to format dates for the date input fields
+const formatDateForInput = (dateString) => {
+  if (!dateString) return "";
+  return new Date(dateString).toISOString().split("T")[0];
+};
 
 const PlanProgress = () => {
-  const { planId: routePlanId } = useParams();
-  const location = useLocation();
+  const { planId } = useParams();
   const navigate = useNavigate();
 
-  const [planName, setPlanName] = useState(
-    location.state?.cropName || `Plan ${routePlanId || "Details"}`
-  );
-  const [stages, setStages] = useState(location.state?.stages || []);
-  const [isLoading, setIsLoading] = useState(false);
-  const [initialStateLoadAttempted, setInitialStateLoadAttempted] =
-    useState(false);
+  // State for the plan data itself
+  const [plan, setPlan] = useState(null);
 
-  const [completedStagesIndices, setCompletedStagesIndices] = useState(() => {
-    if (!routePlanId) return [];
-    const savedProgress = localStorage.getItem(`progress_${routePlanId}`);
-    return savedProgress ? JSON.parse(savedProgress) : [];
+  // State for UI and loading
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
   });
 
-  useEffect(() => {
-    if (location.state?.stages && location.state?.cropName) {
-      setStages(location.state.stages);
-      setPlanName(location.state.cropName);
-      setInitialStateLoadAttempted(true);
-    } else if (!initialStateLoadAttempted && routePlanId && !isLoading) {
-      setIsLoading(true);
-      setInitialStateLoadAttempted(true);
-
-      const fetchPlanDetails = async (id) => {
-        try {
-          const data = await getCropById(id);
-          // The API is expected to return { CropName: "...", Stages: [...] }
-          return data;
-        } catch (error) {
-          console.error("Failed to fetch plan details:", error);
-          throw error;
-        }
-      };
-
-      fetchPlanDetails(routePlanId)
-        .then((data) => {
-          console.log(
-            "PlanProgress: API response for planId",
-            routePlanId,
-            data
-          );
-          // Try to handle both PascalCase and camelCase keys
-          const stagesData = data?.Stages || data?.stages || [];
-          const cropNameData =
-            data?.CropName || data?.cropName || data?.name || "";
-          if (stagesData.length > 0 && cropNameData) {
-            if (stages.length === 0) {
-              setStages(stagesData);
-              setPlanName(cropNameData);
-            }
-          } else if (data) {
-            // Data received but not in expected format
-            console.error(
-              "PlanProgress: Fetched data is invalid or missing Stages/CropName.",
-              data
-            );
-          }
-          // If data is null/undefined from a successful but "not found" API call, do nothing here.
-        })
-        .catch((err) => {
-          console.error(
-            "PlanProgress: Failed to fetch plan details:",
-            err.message
-          );
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+  // State for the checklist of completed stages
+  const [completedStagesIndices, setCompletedStagesIndices] = useState(() => {
+    if (!planId) return [];
+    try {
+      const savedProgress = localStorage.getItem(`progress_${planId}`);
+      return savedProgress ? JSON.parse(savedProgress) : [];
+    } catch {
+      return [];
     }
-  }, [location.state, routePlanId, initialStateLoadAttempted, isLoading]);
+  });
 
+  // Fetch plan details when the component mounts or planId changes
   useEffect(() => {
-    if (routePlanId) {
+    if (!planId) {
+      setError("No Plan ID specified in the URL.");
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    getPlanInfo(planId)
+      .then((data) => {
+        setPlan(data.Crop); // We store the main Crop object in our state
+      })
+      .catch((err) => {
+        console.error("Failed to fetch plan details:", err);
+        setError(
+          "Could not load plan details. The plan may not exist or an error occurred."
+        );
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [planId]);
+
+  // Save the checklist progress to localStorage whenever it changes
+  useEffect(() => {
+    if (planId) {
       localStorage.setItem(
-        `progress_${routePlanId}`,
+        `progress_${planId}`,
         JSON.stringify(completedStagesIndices)
       );
     }
-  }, [completedStagesIndices, routePlanId]);
+  }, [completedStagesIndices, planId]);
 
-  const handleStageComplete = (index) => {
-    if (!completedStagesIndices.includes(index)) {
-      setCompletedStagesIndices((prevCompleted) =>
-        [...prevCompleted, index].sort((a, b) => a - b)
-      );
+  // Handler for updating Actual Cost/Date in the component's state
+  const handleActualsChange = (stageIndex, stepIndex, field, value) => {
+    // Create a deep copy to avoid direct state mutation
+    const newPlan = JSON.parse(JSON.stringify(plan));
+    const step = newPlan.Stages[stageIndex].Steps[stepIndex];
+
+    if (field === "ActualCost") {
+      step.ActualCost = parseFloat(value) || 0;
+    } else if (field === "ActualStartDate") {
+      step.ActualStartDate = value ? new Date(value).toISOString() : null;
+    }
+    setPlan(newPlan);
+  };
+
+  // Handler for the main "Save Progress" button
+  const handleSaveChanges = async () => {
+    if (!plan) return;
+
+    // The backend expects the entire plan DTO for an update
+    const payload = JSON.parse(JSON.stringify(plan));
+
+    try {
+      await updatePlanActuals(plan.Id, payload);
+      setSnackbar({
+        open: true,
+        message: "Progress saved successfully!",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Failed to save progress:", error);
+      setSnackbar({
+        open: true,
+        message: `Error saving progress: ${error.message}`,
+        severity: "error",
+      });
     }
   };
 
+  // Handlers for the stage completion checklist
+  const handleStageComplete = (index) => {
+    if (!completedStagesIndices.includes(index)) {
+      setCompletedStagesIndices((prev) =>
+        [...prev, index].sort((a, b) => a - b)
+      );
+    }
+  };
   const handleStageUndo = (index) => {
-    setCompletedStagesIndices((prevCompleted) =>
-      prevCompleted.filter((i) => i !== index)
-    );
+    setCompletedStagesIndices((prev) => prev.filter((i) => i !== index));
   };
 
-  if (!routePlanId && !isLoading && stages.length === 0) {
-    return (
-      <div className="container py-5">
-        <div className="alert alert-danger text-center" role="alert">
-          No Plan ID specified and no data loaded. Cannot display progress.
-        </div>
-        <button
-          onClick={() => navigate(-1)}
-          className="btn btn-primary mt-3 d-block mx-auto"
-        >
-          Go Back
-        </button>
-      </div>
-    );
-  }
+  // --- RENDER LOGIC ---
 
   if (isLoading) {
     return (
-      <div className="container py-5 text-center">
-        <div
-          className="d-flex justify-content-center align-items-center mb-3"
-          style={{ minHeight: "200px" }}
-        >
-          <div
-            className="spinner-border text-success"
-            role="status"
-            style={{ width: "3rem", height: "3rem" }}
-          >
-            <span className="visually-hidden">Loading plan details...</span>
-          </div>
-          <p className="ms-3 fs-4">Loading plan details for {planName}...</p>
-        </div>
-        <button
-          onClick={() => navigate(-1)}
-          className="btn btn-outline-secondary"
-        >
-          {" "}
-          ← Back{" "}
-        </button>
-      </div>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "80vh",
+          flexDirection: "column",
+        }}
+      >
+        <CircularProgress />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Loading Plan Details...
+        </Typography>
+      </Box>
     );
   }
 
-  const currentProgressCount = completedStagesIndices.length;
-
-  if (!isLoading && stages.length === 0 && initialStateLoadAttempted) {
+  if (error) {
     return (
-      <div className="container py-5">
-        <button
-          onClick={() => navigate(-1)}
-          className="btn btn-outline-secondary mb-4"
-        >
-          <i className="bi bi-arrow-left me-2"></i>Back
-        </button>
-        <h1 className="text-center text-danger mb-3 display-5 fw-bold">
-          {planName || `Plan ${routePlanId}`}
-        </h1>
-        <div className="alert alert-warning text-center" role="alert">
-          Could not load plan details. Please check if the plan exists or try
-          again later.
-        </div>
+      <div className="container py-5 text-center">
+        <Typography color="error" variant="h5">
+          {error}
+        </Typography>
+        <Button variant="contained" onClick={() => navigate(-1)} sx={{ mt: 2 }}>
+          Go Back
+        </Button>
       </div>
     );
   }
+
+  if (!plan) {
+    return (
+      <div className="container py-5 text-center">
+        Plan data could not be loaded.
+      </div>
+    );
+  }
+
+  const stages = plan.Stages || [];
+  const currentProgressCount = completedStagesIndices.length;
 
   return (
     <div className="container py-5">
-      <button
-        onClick={() => navigate(-1)}
-        className="btn btn-outline-secondary mb-4"
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={4}
+        flexWrap="wrap"
+        gap={2}
       >
-        <i className="bi bi-arrow-left me-2"></i>Back
-      </button>
-      <h1 className="text-center text-success mb-3 display-5 fw-bold">
-        {planName} Progress
-      </h1>
-      <p className="text-center text-muted mb-5">
-        Follow the stages below to complete your agricultural plan for{" "}
-        {planName}.
-      </p>
+        <Button
+          variant="outlined"
+          onClick={() => navigate("/ViewMyPlans")}
+          startIcon={<i className="bi bi-arrow-left"></i>}
+        >
+          Back to My Plans
+        </Button>
+        <Typography
+          variant="h4"
+          className="text-success fw-bold text-center flex-grow-1"
+        >
+          {plan.CropName} Progress
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSaveChanges}
+          startIcon={<i className="bi bi-save"></i>}
+        >
+          Save All Progress
+        </Button>
+      </Box>
 
-      {stages && stages.length > 0 ? (
+      {stages.length > 0 && (
         <Progress stages={stages} currentProgress={currentProgressCount} />
-      ) : (
-        <div className="alert alert-info text-center" role="alert">
-          Preparing plan details... If this persists, the plan might have no
-          stages or data could not be loaded.
-        </div>
       )}
 
-      {stages && stages.length > 0 && (
-        <div className="accordion" id="planStagesAccordion">
-          {stages.map((stage, idx) => {
-            const isCompleted = completedStagesIndices.includes(idx);
-            const isActive =
-              (idx === 0 || completedStagesIndices.includes(idx - 1)) &&
-              !isCompleted;
-            const canMarkAsDone =
-              idx === 0 || completedStagesIndices.includes(idx - 1);
+      <div className="mt-5">
+        {stages.map((stage, idx) => {
+          const isCompleted = completedStagesIndices.includes(idx);
+          const canMarkAsDone =
+            idx === 0 || completedStagesIndices.includes(idx - 1);
 
-            return (
-              <div
-                className="accordion-item mb-3 shadow-sm rounded"
-                key={stage.Id || idx}
+          return (
+            <Paper elevation={3} className="mb-4" key={stage.Id || idx}>
+              <Box
+                className={`p-3 d-flex justify-content-between align-items-center ${
+                  isCompleted ? "bg-success text-white" : "bg-light"
+                }`}
               >
-                <h2 className="accordion-header" id={`heading-${idx}`}>
-                  <button
-                    className={`accordion-button p-3 
-                      ${isCompleted ? "bg-success text-white fw-semibold" : ""} 
-                      ${!isActive && !isCompleted ? "collapsed" : ""}
-                    `}
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target={`#collapse-${idx}`}
-                    aria-expanded={isActive || isCompleted ? "true" : "false"}
-                    aria-controls={`collapse-${idx}`}
-                  >
-                    <span
-                      className={`badge me-3 p-2 ${
-                        isCompleted
-                          ? "bg-light text-success border border-success"
-                          : "bg-secondary text-white"
-                      }`}
-                    >
-                      Stage {idx + 1}
-                    </span>
-                    {stage.StageName}
-                    {isCompleted && (
-                      <i className="bi bi-check-circle-fill ms-auto fs-5"></i>
-                    )}
-                  </button>
-                </h2>
-                <div
-                  id={`collapse-${idx}`}
-                  className={`accordion-collapse collapse ${
-                    isActive || isCompleted ? "show" : ""
-                  }`}
-                  aria-labelledby={`heading-${idx}`}
-                  data-bs-parent="#planStagesAccordion"
-                >
-                  <div
-                    className={`card-body p-4 ${
-                      isCompleted
-                        ? "border border-success border-top-0 rounded-bottom"
-                        : "border border-light-subtle border-top-0 rounded-bottom"
+                <Typography variant="h5">
+                  <span
+                    className={`badge me-3 p-2 ${
+                      isCompleted ? "bg-light text-success" : "bg-secondary"
                     }`}
                   >
-                    <p className="mb-1">
-                      <strong>Estimated Cost for Stage:</strong> $
-                      {stage.Cost?.toFixed(2) ?? "N/A"}
-                    </p>
-                    {stage.OptionalLink && (
-                      <p className="mb-3">
-                        <strong>More Info:</strong>{" "}
-                        <a
-                          href={stage.OptionalLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-decoration-none"
-                        >
-                          {stage.OptionalLink}
-                        </a>
-                      </p>
-                    )}
-                    <hr />
-                    {stage.Steps && stage.Steps.length > 0 ? (
-                      <>
-                        <h4 className="mb-3 mt-3 text-muted fw-normal fs-5">
-                          Steps:
-                        </h4>
-                        {stage.Steps.map((step, stepIdx) => (
-                          <div
-                            className="card mb-3 w-100"
-                            key={step.Id || stepIdx}
+                    Stage {idx + 1}
+                  </span>
+                  {stage.StageName}
+                </Typography>
+                {isCompleted && (
+                  <i className="bi bi-check-circle-fill fs-4"></i>
+                )}
+              </Box>
+
+              <Box p={3}>
+                <Box display="flex" justifyContent="space-between" mb={2}>
+                  <Typography variant="body1">
+                    <strong>Stage Estimated Cost:</strong> $
+                    {Number(stage.EstimatedCost || 0).toFixed(2)}
+                  </Typography>
+                  {/* You can add stage-level actuals here if needed */}
+                </Box>
+                <Divider sx={{ my: 2 }} />
+
+                <Typography variant="h6" color="text.secondary" mb={2}>
+                  Steps
+                </Typography>
+                <Grid container spacing={3}>
+                  {(stage.Steps || []).map((step, stepIdx) => (
+                    <Grid item xs={12} md={6} key={step.Id || stepIdx}>
+                      <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
+                        <Typography fontWeight="bold">
+                          {step.StepName}
+
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            mb={2}
                           >
-                            <div className="card-body">
-                              <h5 className="card-title text-primary">
-                                {step.StepName}
-                              </h5>
-                              {step.Description && (
-                                <p className="card-text">{step.Description}</p>
-                              )}
-                              <ul className="list-group list-group-flush mt-2">
-                                {step.Tool && (
-                                  <li className="list-group-item px-0">
-                                    <strong>Tool:</strong> {step.Tool}
-                                  </li>
-                                )}
-                                {step.DurationDays !== undefined && (
-                                  <li className="list-group-item px-0">
-                                    <strong>Duration:</strong>{" "}
-                                    {step.DurationDays} day(s)
-                                  </li>
-                                )}
-                                {step.Cost !== undefined && (
-                                  <li className="list-group-item px-0">
-                                    <strong>Est. Step Cost:</strong> $
-                                    {step.Cost?.toFixed(2)}
-                                  </li>
-                                )}
-                                {step.Fertilizer && (
-                                  <li className="list-group-item px-0">
-                                    <strong>Fertilizer:</strong>{" "}
-                                    {step.Fertilizer}
-                                  </li>
-                                )}
-                              </ul>
-                              {step.ToolImage && (
-                                <div className="mt-3 text-center">
-                                  <img
-                                    src={step.ToolImage}
-                                    alt={step.Tool || "Tool image"}
-                                    className="img-thumbnail"
-                                    style={{
-                                      maxWidth: "150px",
-                                      maxHeight: "150px",
-                                      objectFit: "contain",
-                                    }}
-                                    onError={(e) => {
-                                      e.target.style.display = "none";
-                                    }}
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </>
-                    ) : (
-                      <p className="text-muted">
-                        No steps defined for this stage.
-                      </p>
-                    )}
-                    <div className="mt-4 d-flex justify-content-end">
-                      {isCompleted ? (
-                        <button
-                          className="btn btn-outline-warning"
-                          onClick={() => handleStageUndo(idx)}
+                            Step Duration:  
+                            {step.DurationDays || 0} day
+                          </Typography>
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          mb={2}
                         >
-                          <i className="bi bi-arrow-counterclockwise me-2"></i>
-                          Undo Completion
-                        </button>
-                      ) : (
-                        <button
-                          className="btn btn-lg btn-success"
-                          onClick={() => handleStageComplete(idx)}
-                          disabled={!canMarkAsDone}
-                        >
-                          <i className="bi bi-check-circle me-2"></i>Mark Stage{" "}
-                          {idx + 1} as Done
-                        </button>
-                      )}
-                    </div>
-                    {!isCompleted && !canMarkAsDone && (
-                      <small className="form-text text-muted d-block text-end mt-1">
-                        {" "}
-                        Please complete the previous stage first.{" "}
-                      </small>
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+                          Est. Cost: $
+                          {Number(step.EstimatedCost || 0).toFixed(2)}
+                        </Typography>
+                        <TextField
+                          label="Actual Cost"
+                          type="number"
+                          fullWidth
+                          size="small"
+                          value={step.ActualCost || ""}
+                          onChange={(e) =>
+                            handleActualsChange(
+                              idx,
+                              stepIdx,
+                              "ActualCost",
+                              e.target.value
+                            )
+                          }
+                          sx={{ mb: 2 }}
+                        />
+                        <TextField
+                          label="Actual Start Date"
+                          type="date"
+                          fullWidth
+                          size="small"
+                          value={formatDateForInput(step.ActualStartDate)}
+                          onChange={(e) =>
+                            handleActualsChange(
+                              idx,
+                              stepIdx,
+                              "ActualStartDate",
+                              e.target.value
+                            )
+                          }
+                          InputLabelProps={{ shrink: true }}
+                        />
+                      </Paper>
+                    </Grid>
+                  ))}
+                </Grid>
+
+                <Box
+                  mt={3}
+                  display="flex"
+                  justifyContent="end"
+                  alignItems="center"
+                >
+                  {isCompleted ? (
+                    <Button
+                      variant="outlined"
+                      color="warning"
+                      onClick={() => handleStageUndo(idx)}
+                      startIcon={
+                        <i className="bi bi-arrow-counterclockwise"></i>
+                      }
+                    >
+                      Mark as Not Done
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      size="large"
+                      onClick={() => handleStageComplete(idx)}
+                      disabled={!canMarkAsDone}
+                    >
+                      <i className="bi bi-check-circle me-2"></i>Mark Stage as
+                      Done
+                    </Button>
+                  )}
+                </Box>
+                {!isCompleted && !canMarkAsDone && (
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ display: "block", textAlign: "end", mt: 1 }}
+                  >
+                    Complete the previous stage to enable.
+                  </Typography>
+                )}
+              </Box>
+            </Paper>
+          );
+        })}
+      </div>
+
+      {stages.length > 0 && currentProgressCount === stages.length && (
+        <div
+          className="alert alert-success text-center mt-5 p-4 shadow"
+          role="alert"
+        >
+          <h4 className="alert-heading">
+            <i className="bi bi-trophy-fill me-2"></i>Congratulations!
+          </h4>
+          <p>You have completed all stages for {plan.CropName}.</p>
         </div>
       )}
-      {stages &&
-        stages.length > 0 &&
-        currentProgressCount === stages.length && (
-          <div
-            className="alert alert-success text-center mt-5 p-4 shadow"
-            role="alert"
-          >
-            <h4 className="alert-heading">
-              <i className="bi bi-trophy-fill me-2"></i>Congratulations!
-            </h4>
-            <p>You have completed all stages for {planName}.</p>
-            <hr />
-            <p className="mb-0">Well done on your progress!</p>
-          </div>
-        )}
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <MuiAlert
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+        >
+          {snackbar.message}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };

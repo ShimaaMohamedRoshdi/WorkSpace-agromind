@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import api from "../../services/api"; // Use shared API instance
+import api from "../../services/api";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
   Dialog,
@@ -7,704 +7,548 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Button,
+  Button as MuiButton,
 } from "@mui/material";
-
-const cropList = [
-  "Wheat",
-  "Barley",
-  "Maize (Corn)",
-  "Rice",
-  "Soybeans",
-  "Potatoes",
-  "Tomatoes",
-  "Carrots",
-  "Onions",
-  "Strawberries",
-  "Other",
-];
-const cropStagesList = [
-  "Soil Preparation",
-  "Seed Selection",
-  "Germination",
-  "Seedling Stage",
-  "Vegetative Growth",
-  "Bud Formation",
-  "Flowering",
-  "Pollination",
-  "Fruit Development",
-  "Maturity & Ripening",
-  "Harvesting",
-  "Post-Harvest Handling",
-];
-
-const toolsList = [
-  "Tractor",
-  "Plow",
-  "Irrigation System",
-  "Hoe",
-  "Seeder",
-  "Other",
-];
-const fertilizersList = ["Compost", "Urea", "Phosphate", "Potassium", "Other"];
+import { SettingsInputComponentSharp } from "@mui/icons-material";
 
 const ExpertDashboard = () => {
-  const [cropName, setCropName] = useState("");
-  const [customCrop, setCustomCrop] = useState("");
-  const [stages, setStages] = useState([]);
-  const [crops, setCrops] = useState([]);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [editingCropId, setEditingCropId] = useState(null);
-  const [cropImage, setCropImage] = useState("");
-  const [description, setDescription] = useState("");
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [selectedCropId, setSelectedCropId] = useState(null);
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  // State is almost identical to FarmerPlan, but without land-related state
+  const [plan, setCrop] = useState({
+    Id: null,
+    CropName: "",
+    PictureUrl: "",
+    CropDescription: "",
+    StartDate: "",
+    LastStartDate: "",
+    Duration: 0,
+    Stages: [],
+  });
 
-  // Fetch crops from backend on mount
+  const [allCrops, setAllCrops] = useState([]); // Will hold the expert's plans
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [cropIdToDelete, setCropIdToDelete] = useState(null);
+
+  // Fetch the expert's created plans (templates)
+  const fetchExpertCrops = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      const headers = { Authorization: `Bearer ${token}` };
+
+      // We still call GetMyPlans, as the backend logic should differentiate
+      // and return templates if the logged-in user is an Expert.
+      const cropsRes = await api.get("/api/Crop/GetCrops", { headers });
+      setAllCrops(cropsRes.data);
+    } catch (err) {
+      console.error("Error fetching expert Crops:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    api
-      .get("/api/Crop/GetCrops") // Updated to use shared api instance and correct baseURL
-      .then((res) => {
-        setCrops(res.data);
-        console.log("Fetched crops:", res.data); // Log crops for debugging
-      })
-      .catch((err) => console.error("Error fetching crops:", err));
+    fetchExpertCrops();
   }, []);
 
-  const handleOpenDeleteDialog = (cropId, event) => {
-    if (event && event.target) event.target.blur();
-    const idStr = String(cropId);
-    setSelectedCropId(idStr);
-    console.log("Opening delete dialog for cropId:", idStr);
+  // All form handlers are identical to FarmerPlan
+  const handleCropChange = (e) => {
+    const { name, value } = e.target;
+    setCrop((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleStageChange = (stageIndex, e) => {
+    const { name, value } = e.target;
+    const updatedStages = [...plan.Stages];
+    updatedStages[stageIndex] = { ...updatedStages[stageIndex], [name]: value };
+    setCrop((prev) => ({ ...prev, Stages: updatedStages }));
+  };
+  const handleStepChange = (stageIndex, stepIndex, e) => {
+    const { name, value } = e.target;
+    const updatedStages = [...plan.Stages];
+    updatedStages[stageIndex].Steps[stepIndex] = {
+      ...updatedStages[stageIndex].Steps[stepIndex],
+      [name]: value,
+    };
+    setCrop((prev) => ({ ...prev, Stages: updatedStages }));
+  };
+  const addStage = () => {
+    const newStage = {
+      Id: 0,
+      StageName: "",
+      OptionalLink: "",
+      EstimatedCost: 0,
+      Steps: [],
+    };
+    setCrop((prev) => ({ ...prev, Stages: [...prev.Stages, newStage] }));
+  };
+  const removeStage = (stageIndex) => {
+    const updatedStages = plan.Stages.filter(
+      (_, index) => index !== stageIndex
+    );
+    setCrop((prev) => ({ ...prev, Stages: updatedStages }));
+  };
+  const addStep = (stageIndex) => {
+    // New step for an expert does NOT include PlannedStartDate
+    const newStep = {
+      Id: 0,
+      StepName: "",
+      Description: "",
+      Tool: "",
+      ToolImage: "",
+      DurationDays: 0,
+      Fertilizer: "",
+      EstimatedCost: 0,
+    };
+    const updatedStages = [...plan.Stages];
+    updatedStages[stageIndex].Steps.push(newStep);
+    setCrop((prev) => ({ ...prev, Stages: updatedStages }));
+  };
+  const removeStep = (stageIndex, stepIndex) => {
+    const updatedStages = [...plan.Stages];
+    updatedStages[stageIndex].Steps = updatedStages[stageIndex].Steps.filter(
+      (_, index) => index !== stepIndex
+    );
+    setCrop((prev) => ({ ...prev, Stages: updatedStages }));
+  };
+
+  // In ExpertDashboard.jsx
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!plan.Stages || plan.Stages.length === 0) {
+      alert("A plan template must have at least one stage.");
+      return;
+    }
+
+    // This part is correct
+    const mappedStages = plan.Stages.map((stage) => ({
+      Id: stage.Id || 0,
+      StageName: stage.StageName,
+      OptionalLink: stage.OptionalLink,
+      EstimatedCost: Number(stage.EstimatedCost) || 0,
+      Steps: (stage.Steps || []).map((step) => ({
+        Id: step.Id || 0,
+        StepName: step.StepName,
+        Description: step.Description,
+        Tool: step.Tool,
+        ToolImage: step.ToolImage,
+        DurationDays: Number(step.DurationDays) || 0,
+        Fertilizer: step.Fertilizer,
+        EstimatedCost: Number(step.EstimatedCost) || 0,
+      })),
+    }));
+
+    // ✅ THIS IS THE FIX ✅
+    const payload = {
+      Id: plan.Id || 0,
+      CropName: plan.CropName,
+      PictureUrl: plan.PictureUrl,
+      CropDescription: plan.CropDescription,
+      StartDate: plan.StartDate
+        ? new Date(plan.StartDate).toISOString()
+        : new Date().toISOString(),
+      LastStartDate: plan.LastStartDate
+        ? new Date(plan.LastStartDate).toISOString()
+        : new Date().toISOString(),
+      Duration: Number(plan.Duration) || 0,
+      // Add the mappedStages to the payload object
+      Stages: mappedStages,
+    };
+
+    console.log(
+      "Submitting Expert Template Payload:",
+      JSON.stringify(payload, null, 2)
+    );
+
+    try {
+      const apiCall = isEditing
+        ? api.put(`/api/Crop/UpdateCrop/${plan.Id}`, payload)
+        : api.post("/api/Crop/AddCrop", payload);
+      await apiCall;
+      alert(`Crop Template ${isEditing ? "updated" : "added"} successfully!`);
+      resetForm();
+      fetchExpertCrops();
+    } catch (error) {
+      console.error(`Error saving Crop template:`, error);
+      const errorMsg =
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        "An unknown error occurred.";
+      alert(`Failed to save crop: ${errorMsg}`);
+    }
+  };
+  const handleEdit = (planToEdit) => {
+    setIsEditing(true);
+    setCrop({
+      Id: planToEdit.Id || planToEdit.id,
+      CropName: planToEdit.CropName || planToEdit.cropName || "",
+      PictureUrl: planToEdit.PictureUrl || planToEdit.pictureUrl || "",
+      CropDescription:
+        planToEdit.CropDescription || planToEdit.cropDescription || "",
+      StartDate: (planToEdit.StartDate || planToEdit.startDate || "").split(
+        "T"
+      )[0],
+      LastStartDate: (
+        planToEdit.LastStartDate ||
+        planToEdit.lastStartDate ||
+        ""
+      ).split("T")[0],
+      Duration: planToEdit.Duration || planToEdit.duration || 0,
+      Stages: (planToEdit.Stages || planToEdit.stages || []).map((stage) => ({
+        ...stage,
+        Steps: stage.Steps || stage.steps || [], // No need to format date here
+      })),
+    });
+    window.scrollTo(0, 0);
+  };
+
+  const openDeleteModal = (id) => {
+    setCropIdToDelete(id);
     setOpenDeleteDialog(true);
   };
 
-  const handleConfirmDelete = () => {
-    if (
-      selectedCropId === null ||
-      selectedCropId === undefined ||
-      selectedCropId === "undefined"
-    ) {
-      alert("No crop selected for deletion.");
+  const handleConfirmDelete = async () => {
+    try {
+      await api.delete(`/api/Crop/DeleteCrop/${cropIdToDelete}`);
+      alert("Plan template deleted successfully.");
+      fetchExpertCrops();
+    } catch (error) {
+      console.error("Error deleting plan:", error);
+      alert("Failed to delete plan.");
+    } finally {
       setOpenDeleteDialog(false);
-      return;
+      setCropIdToDelete(null);
     }
-    const crop = crops.find(
-      (c) =>
-        String(c.id) === selectedCropId ||
-        String(c.cropId) === selectedCropId ||
-        String(c.Id) === selectedCropId ||
-        String(c.CropId) === selectedCropId
-    );
-    const idToDelete = crop
-      ? crop.id ?? crop.cropId ?? crop.Id ?? crop.CropId
-      : selectedCropId;
-    console.log("Attempting to delete crop with id:", idToDelete, crop);
-    api
-      .delete(`/api/Crop/DeleteCrop/${idToDelete}`)
-      .then((res) => {
-        console.log("Delete response:", res);
-        api.get("/api/Crop/GetCrops").then((res) => setCrops(res.data));
-        setOpenDeleteDialog(false);
-        setSelectedCropId(null);
-      })
-      .catch((err) => {
-        console.error("Delete error:", err);
-        alert("Failed to delete crop from backend.");
-        setOpenDeleteDialog(false);
-        setSelectedCropId(null);
-      });
   };
 
-  const handleOpenUpdateDialog = (cropId, event) => {
-    if (event && event.target) event.target.blur();
-    const crop = crops.find(
-      (c) =>
-        String(c.id) === String(cropId) ||
-        String(c.cropId) === String(cropId) ||
-        String(c.Id) === String(cropId) ||
-        String(c.CropId) === String(cropId)
-    );
-    if (!crop) {
-      console.error("No crop found for update dialog with id:", cropId, crops);
-      return;
-    }
-    setEditingCropId(crop.id ?? crop.cropId ?? crop.Id ?? crop.CropId);
-    setCropName(crop.cropName || crop.name || crop.CropName || crop.Name || "");
-    // Always ensure stages and steps are arrays
-    const rawStages = JSON.parse(
-      JSON.stringify(crop.stages || crop.Stages || [])
-    );
-    const safeStages = Array.isArray(rawStages)
-      ? rawStages.map((s) => ({
-          ...s,
-          steps: Array.isArray(s.steps) ? s.steps : [],
-        }))
-      : [];
-    setStages(safeStages);
-    setCropImage(crop.cropImage || crop.CropImage || "");
-    setDescription(crop.description || crop.CropDescription || "");
-    // Do NOT open a dialog
-  };
-
-  const handleConfirmUpdate = () => {
-    if (editingCropId === null) {
-      alert("No crop selected for update.");
-      return;
-    }
-    // Prevent update if no stages
-    if (!stages || stages.length === 0) {
-      alert("You must add at least one stage before updating the crop.");
-      return;
-    }
-    // Map stages and steps to PascalCase keys for backend compatibility
-    const mappedStages = stages.map((stage) => ({
-      StageName: stage.stage || stage.stageName || "",
-      Duration: Number(stage.duration) || 0,
-      Description: stage.description || "",
-      PictureUrl: stage.pictureUrl || "",
-      TotalCost: Number(stage.cost || stage.totalCost) || 0,
-      OptionalLink: stage.link || stage.optionalLink || "",
-      Steps: (stage.steps || []).map((step) => ({
-        StepName: step.stepName || "",
-        Tool: step.tool || "",
-        ToolImage: step.toolImage || "",
-        DurationDays: Number(step.durationDays) || 0,
-        Fertilizer: step.fertilizer || "",
-        FertilizerDuration: Number(step.fertilizerDuration) || 0,
-        Cost: Number(step.cost) || 0,
-        Description: step.description || "",
-      })),
-    }));
-    const normalizedCropImage = (cropImage || "").replace(/\\/g, "/");
-    // Ensure editingCropId is a number if possible
-    const numericCropId = isNaN(Number(editingCropId))
-      ? editingCropId
-      : Number(editingCropId);
-    const payload = {
-      CropId: numericCropId, // For backend compatibility
-      Id: numericCropId, // For backend compatibility
-      CropName: cropName === "Other" ? customCrop : cropName,
-      CropImage: normalizedCropImage,
-      Description: description,
-      Stages: mappedStages,
-    };
-    console.log("Update URL ID:", numericCropId);
-    console.log("Update payload:", JSON.stringify(payload, null, 2));
-    api
-      .put(`/api/Crop/UpdateCrop/${editingCropId}`, payload)
-      .then(() => {
-        setSuccessMessage("Crop updated successfully!");
-        setEditingCropId(null);
-        setCropName("");
-        setCustomCrop("");
-        setStages([]);
-        setCropImage("");
-        setDescription("");
-        api.get("/api/Crop/GetCrops").then((res) => {
-          setCrops(res.data);
-        });
-      })
-      .catch((error) => {
-        console.error("Error updating crop:", error);
-        if (error.response) {
-          console.error("Backend error response:", error.response);
-          console.error("Backend error data:", error.response.data);
-          alert(
-            "Failed to update crop. Backend says: " +
-              (typeof error.response.data === "string"
-                ? error.response.data
-                : JSON.stringify(error.response.data))
-          );
-        } else {
-          alert("Failed to update crop.");
-        }
-      });
-  };
-
-  const addStage = () => {
-    setStages([...stages, { stage: "", cost: "", link: "", steps: [] }]);
-  };
-
-  const addStep = (stageIndex) => {
-    const updatedStages = [...stages];
-    updatedStages[stageIndex].steps.push({
-      description: "",
-      tool: "",
-      toolImage: "",
-      durationDays: "",
-      fertilizer: "",
-      fertilizerDuration: "",
+  const resetForm = () => {
+    setIsEditing(false);
+    setCrop({
+      Id: null,
+      CropName: "",
+      PictureUrl: "",
+      CropDescription: "",
+      StartDate: "",
+      LastStartDate: "",
+      Duration: "",
+      Stages: [],
     });
-    setStages(updatedStages);
   };
 
-  const handleStageChange = (index, key, value) => {
-    const updatedStages = [...stages];
-    updatedStages[index][key] = value;
-    setStages(updatedStages);
-  };
-
-  const handleStepChange = (stageIndex, stepIndex, key, value) => {
-    const updatedStages = [...stages];
-    updatedStages[stageIndex].steps[stepIndex][key] = value;
-    setStages(updatedStages);
-  };
-
-  const handleSubmit = () => {
-    const totalCost = stages.reduce(
-      (sum, stage) => sum + Number(stage.cost || 0),
-      0
-    );
-
-    // Map stages to match backend DTO
-    const mappedStages = stages.map((stage) => ({
-      stageName: stage.stage || "",
-      duration: Number(stage.duration) || 0,
-      description: stage.description || "",
-      pictureUrl: stage.pictureUrl || "",
-      totalCost: Number(stage.cost) || 0,
-      optionalLink: stage.link || "",
-      steps: (stage.steps || []).map((step) => ({
-        stepName: step.stepName || "",
-        tool: step.tool || "",
-        toolImage: step.toolImage || "",
-        durationDays: Number(step.durationDays) || 0,
-        fertilizer: step.fertilizer || "",
-        fertilizerDuration: Number(step.fertilizerDuration) || 0,
-        cost: Number(step.cost) || 0,
-        description: step.description || "",
-      })),
-    }));
-
-    // Ensure image path uses forward slashes
-    const normalizedCropImage = (cropImage || "").replace(/\\/g, "/");
-
-    const payload = {
-      cropName: (cropName === "Other" ? customCrop : cropName) || "",
-      cropImage: normalizedCropImage,
-      description: description || "",
-      stages: mappedStages,
-    };
-
-    // Log payload for debugging
-    console.log("Submitting payload:", payload);
-
-    // Only update crops from backend after add/update
-    api
-      .post("/api/Crop/AddCrop", payload)
-      .then(() => {
-        setSuccessMessage("Crop saved to backend!");
-        api
-          .get("/api/Crop/GetCrops") // Use consistent endpoint
-          .then((res) => setCrops(res.data))
-          .catch((err) => console.error("Error fetching crops:", err));
-      })
-      .catch((error) => {
-        console.error("Error saving crop:", error);
-        alert("Something went wrong while connecting to the backend.");
-      });
-
-    setCropName("");
-    setCustomCrop("");
-    setStages([]);
-    setCropImage("");
-    setDescription("");
-    setEditingCropId(null);
-  };
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setCropImage(file); // ✅ Store the file itself, not URL.createObjectURL
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result); // just for preview
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  if (loading) return <div className="text-center mt-5">Loading...</div>;
 
   return (
     <div>
-      <h2 className="text-center mt-4 text-success">Expert Dashboard</h2>
       <div className="d-flex">
-        {/* Sidebar */}
-        <div
-          className="sidebar p-2 border-end"
-          style={{ width: "250px", background: "#f8f9fa" }}
-        >
-          <h5>Added Crops</h5>
-          <ul className="list-group">
-            {crops.map((crop, index) => {
-              // Support all possible ID property names
-              const cropId =
-                crop.id ??
-                crop.cropId ??
-                crop.Id ??
-                crop.CropId ??
-                `local-${index}`;
-              return (
-                <li
-                  key={cropId}
-                  className="list-group-item d-flex justify-content-between align-items-center"
-                >
-                  <span>
-                    {crop.cropName ||
-                      crop.name ||
-                      crop.CropName ||
-                      crop.Name ||
-                      "Unnamed Crop"}
-                  </span>
-                  <button
-                    className="btn btn-sm btn-primary me-1"
-                    onClick={(e) =>
-                      handleOpenUpdateDialog(
-                        String(
-                          crop.id ?? crop.cropId ?? crop.Id ?? crop.CropId
-                        ),
-                        e
-                      )
-                    }
+        {/* ✅ SIDEBAR SECTION (STYLES NOW IDENTICAL TO FARMERPLAN) ✅ */}
+        <div className="col-lg-3 col-md-4 col-12 bg-light p-3 border-end min-vh-100">
+          <div className="p-2 h-100">
+            <h2 className="fs-3 fw-bolder mb-4 text-success text-center">
+              Expert Crops
+            </h2>
+            {allCrops.length === 0 ? (
+              <p className="text-muted">No Crops created yet.</p>
+            ) : (
+              <ul className="list-unstyled">
+                {allCrops
+                .filter((plan) => plan.PlanType === "ExpertTemplate") // Add this line to filter the array
+                .map((p) => (
+                  <li
+                    key={p.Id || p.id}
+                    className="bg-white p-3 mb-3 rounded d-flex justify-content-between align-items-center shadow-sm"
                   >
-                    Update
-                  </button>
-                  <button
-                    className="btn btn-sm btn-danger"
-                    onClick={(e) =>
-                      handleOpenDeleteDialog(
-                        String(
-                          crop.id ?? crop.cropId ?? crop.Id ?? crop.CropId
-                        ),
-                        e
-                      )
-                    }
-                  >
-                    Delete
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-
-          {/* Delete Confirmation Dialog */}
-          <Dialog
-            open={openDeleteDialog}
-            onClose={() => setOpenDeleteDialog(false)}
-          >
-            <DialogTitle>Confirm Delete</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Are you sure you want to delete this crop?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => setOpenDeleteDialog(false)}
-                color="primary"
-              >
-                Cancel
-              </Button>
-              <Button onClick={handleConfirmDelete} color="error">
-                Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
+                    <div>
+                      <div className="fw-semibold text-success">
+                        {p.CropName || p.cropName}
+                      </div>
+                    </div>
+                    <div className="d-flex gap-2 justify-content-end">
+                      <button
+                        className="btn btn-outline-primary btn-sm"
+                        onClick={() => handleEdit(p)}
+                      >
+                        Update
+                      </button>
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => openDeleteModal(p.Id || p.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
-
+        {/* --- END OF SIDEBAR SECTION --- */}
         {/* Main Content */}
-        <div className="container mt-2">
-          {successMessage && (
-            <div className="alert alert-success">{successMessage}</div>
-          )}
+        <div className="container mt-2 flex-grow-1">
+          <h2 className="mt-4 text-success ">
+            {isEditing ? "Edit Crop Template" : "Create a New Crop Template"}
+          </h2>
 
-          {/* Crop Name and Image */}
-          <div className="mb-2">
-            <label className="fw-bold">Crop Name:</label>
-            <select
-              className="form-control w-50"
-              value={cropName || ""}
-              onChange={(e) => setCropName(e.target.value)}
-            >
-              <option value="">Select Crop</option>
-              {cropList.map((crop, i) => (
-                <option key={i} value={crop}>
-                  {crop}
-                </option>
-              ))}
-            </select>
-            {cropName === "Other" && (
+          <form onSubmit={handleSubmit}>
+            <div className="mb-2">
+              <label className="fw-bold">Crop Name:</label>
               <input
                 type="text"
-                className="form-control mt-2 w-50"
-                placeholder="Enter crop name"
-                value={customCrop || ""}
-                onChange={(e) => setCustomCrop(e.target.value)}
-              />
-            )}
-
-            <label className="fw-bold mt-2">Description:</label>
-            <input
-              type="text"
-              className="form-control w-50"
-              placeholder="Enter Description"
-              value={description || ""}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-
-            <label className="fw-bold mt-2">Crop Image URL:</label>
-            <input
-              type="text"
-              className="form-control w-50"
-              placeholder="Enter Crop Image URL"
-              value={cropImage || ""}
-              onChange={(e) => setCropImage(e.target.value)} // Store URL
-            />
-            {cropImage && (
-              <img
-                src={cropImage} // Show image using the URL entered
-                alt="Crop Preview"
-                className="mt-2"
-                style={{ width: "150px", height: "150px", objectFit: "cover" }}
-              />
-            )}
-
-            <label className="fw-bold mt-2">Start date:</label>
-            <input
-              type="date"
-              className="form-control w-50"
-              placeholder="Start Date"
-            />
-
-            <label className="fw-bold mt-2">Last start date:</label>
-            <input
-              type="date"
-              className="form-control w-50"
-              placeholder="Last Start Date"
-            />
-
-            <label className="fw-bold mt-2">Duration for planting:</label>
-            <input
-              type="number"
-              className="form-control w-50"
-              placeholder="Duration (Days)"
-            />
-          </div>
-
-          {/* Stages */}
-          <h5 className="fw-bold">Crop Stages</h5>
-          {stages.map((stage, index) => (
-            <div key={index} className="mb-3 border p-2">
-              <select
                 className="form-control w-50"
-                value={stage.stage}
-                onChange={(e) =>
-                  handleStageChange(index, "stage", e.target.value)
-                }
-              >
-                <option value="">Select Stage</option>
-                {cropStagesList.map((stageName, i) => (
-                  <option key={i} value={stageName}>
-                    {stageName}
-                  </option>
-                ))}
-              </select>
+                name="CropName"
+                placeholder="Enter crop name"
+                value={plan.CropName}
+                onChange={handleCropChange}
+                required
+              />
+              <label className="fw-bold mt-2">Crop Description:</label>
+              <input
+                type="text"
+                className="form-control w-50"
+                name="CropDescription"
+                placeholder="Enter Description"
+                value={plan.CropDescription}
+                onChange={handleCropChange}
+              />
+              <label className="fw-bold mt-2">Crop Image URL:</label>
+              <input
+                type="text"
+                className="form-control w-50"
+                name="PictureUrl"
+                placeholder="Enter Crop Image URL"
+                value={plan.PictureUrl}
+                onChange={handleCropChange}
+              />
+              <label className="fw-bold mt-2">Recommended Start Date:</label>
+              <input
+                type="date"
+                className="form-control w-50"
+                name="StartDate"
+                value={plan.StartDate}
+                onChange={handleCropChange}
+                required
+              />
+              <label className="fw-bold mt-2">
+                Recommended Last Start Date:
+              </label>
+              <input
+                type="date"
+                className="form-control w-50"
+                name="LastStartDate"
+                value={plan.LastStartDate}
+                onChange={handleCropChange}
+                required
+              />
+              <label className="fw-bold mt-2">Typical Duration (Days):</label>
+              <input
+                type="number"
+                className="form-control w-50"
+                name="Duration"
+                placeholder="Duration in Days"
+                value={plan.Duration}
+                onChange={handleCropChange}
+              />
+            </div>
 
-              {stage.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="mt-2 border p-2">
+            <h5 className="fw-bold">Plan Stages</h5>
+            {plan.Stages.map((stage, stageIndex) => {
+              const calculatedStageCost =
+                (Number(stage.EstimatedCost) || 0) +
+                (stage.Steps || []).reduce(
+                  (sum, step) => sum + (Number(step.EstimatedCost) || 0),
+                  0
+                );
+              return (
+                <div key={stageIndex} className="mb-3 border p-2">
+                  <h6 className="fw-bold">
+                    Stage {stageIndex + 1}
+                    <button
+                      type="button"
+                      className="btn-close float-end"
+                      onClick={() => removeStage(stageIndex)}
+                    ></button>
+                  </h6>
                   <input
                     type="text"
-                    className="form-control mt-2 w-50"
-                    placeholder="Step Name"
-                    value={step.stepName || ""}
-                    onChange={(e) =>
-                      handleStepChange(
-                        index,
-                        stepIndex,
-                        "stepName",
-                        e.target.value
-                      )
-                    }
+                    className="form-control w-50"
+                    placeholder="Stage Name"
+                    name="StageName"
+                    value={stage.StageName}
+                    onChange={(e) => handleStageChange(stageIndex, e)}
+                    required
                   />
                   <input
                     type="text"
                     className="form-control mt-2 w-50"
                     placeholder="Optional Link"
-                    value={stage.link}
-                    onChange={(e) =>
-                      handleStageChange(index, "link", e.target.value)
-                    }
+                    name="OptionalLink"
+                    value={stage.OptionalLink}
+                    onChange={(e) => handleStageChange(stageIndex, e)}
                   />
-
-                  {/* Tools and Duration */}
-                  <div className="d-flex mt-2">
-                    <select
-                      className="form-control me-2 w-25"
-                      value={step.tool}
-                      onChange={(e) =>
-                        handleStepChange(
-                          index,
-                          stepIndex,
-                          "tool",
-                          e.target.value
-                        )
-                      }
-                    >
-                      <option value="">Select Tool</option>
-                      {toolsList.map((tool, i) => (
-                        <option key={i} value={tool}>
-                          {tool}
-                        </option>
-                      ))}
-                    </select>
-
-                    <input
-                      type="text"
-                      className="form-control w-25 me-2"
-                      placeholder="Tool Image URL"
-                      value={step.toolImage}
-                      onChange={(e) =>
-                        handleStepChange(
-                          index,
-                          stepIndex,
-                          "toolImage",
-                          e.target.value
-                        )
-                      }
-                    />
-
-                    <input
-                      type="number"
-                      className="form-control w-25"
-                      placeholder="Duration (Days)"
-                      value={step.durationDays}
-                      onChange={(e) =>
-                        handleStepChange(
-                          index,
-                          stepIndex,
-                          "durationDays",
-                          e.target.value
-                        )
-                      }
-                    />
+                  <label className="fw-bold mt-2">
+                    Stage's Own Estimated Cost
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control mt-1 w-50"
+                    placeholder="Stage Cost"
+                    name="EstimatedCost"
+                    value={stage.EstimatedCost || ""}
+                    onChange={(e) => handleStageChange(stageIndex, e)}
+                  />
+                  <div className="mt-1 fw-bold bg-light p-1">
+                    Total Estimated Cost for this Stage: $
+                    {calculatedStageCost.toFixed(2)}
                   </div>
 
-                  {/* Fertilizer, Duration and Cost in one row */}
-                  <div className="d-flex mt-2 align-items-center">
-                    <select
-                      className="form-control me-2 w-25"
-                      value={step.fertilizer}
-                      onChange={(e) =>
-                        handleStepChange(
-                          index,
-                          stepIndex,
-                          "fertilizer",
-                          e.target.value
-                        )
-                      }
-                    >
-                      <option value="">Select Fertilizer</option>
-                      {fertilizersList.map((fertilizer, i) => (
-                        <option key={i} value={fertilizer}>
-                          {fertilizer}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="number"
-                      className="form-control w-25 me-2"
-                      placeholder="Duration (Days)"
-                      value={step.fertilizerDuration}
-                      onChange={(e) =>
-                        handleStepChange(
-                          index,
-                          stepIndex,
-                          "fertilizerDuration",
-                          e.target.value
-                        )
-                      }
-                    />
-                    <input
-                      type="number"
-                      className="form-control w-25"
-                      placeholder="Step Cost"
-                      value={step.cost}
-                      onChange={(e) =>
-                        handleStepChange(
-                          index,
-                          stepIndex,
-                          "cost",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </div>
+                  {stage.Steps.map((step, stepIndex) => (
+                    <div key={stepIndex} className="mt-2 border p-2">
+                      <h6 className="fw-normal">
+                        Step {stepIndex + 1}
+                        <button
+                          type="button"
+                          className="btn-close btn-sm float-end"
+                          onClick={() => removeStep(stageIndex, stepIndex)}
+                        ></button>
+                      </h6>
+                      <input
+                        type="text"
+                        className="form-control mt-2 w-50"
+                        placeholder="Step Name"
+                        name="StepName"
+                        value={step.StepName}
+                        onChange={(e) =>
+                          handleStepChange(stageIndex, stepIndex, e)
+                        }
+                        required
+                      />
+                      <input
+                        type="text"
+                        className="form-control mt-2 w-50"
+                        placeholder="Step Description"
+                        name="Description"
+                        value={step.Description}
+                        onChange={(e) =>
+                          handleStepChange(stageIndex, stepIndex, e)
+                        }
+                      />
+
+                      <div className="d-flex mt-2">
+                        <input
+                          type="text"
+                          className="form-control me-2 w-25"
+                          placeholder="Tool"
+                          name="Tool"
+                          value={step.Tool}
+                          onChange={(e) =>
+                            handleStepChange(stageIndex, stepIndex, e)
+                          }
+                        />
+                        <input
+                          type="text"
+                          className="form-control w-25"
+                          placeholder="Tool Image URL"
+                          name="ToolImage"
+                          value={step.ToolImage}
+                          onChange={(e) =>
+                            handleStepChange(stageIndex, stepIndex, e)
+                          }
+                        />
+                      </div>
+
+                      <div className="d-flex mt-2 align-items-center">
+                        <input
+                          type="text"
+                          className="form-control me-2 w-25"
+                          placeholder="Fertilizer"
+                          name="Fertilizer"
+                          value={step.Fertilizer}
+                          onChange={(e) =>
+                            handleStepChange(stageIndex, stepIndex, e)
+                          }
+                        />
+                        <input
+                          type="number"
+                          className="form-control me-2 w-25"
+                          placeholder="Duration (Days)"
+                          name="DurationDays"
+                          value={step.DurationDays}
+                          onChange={(e) =>
+                            handleStepChange(stageIndex, stepIndex, e)
+                          }
+                        />
+                        <input
+                          type="number"
+                          className="form-control w-25"
+                          placeholder="Step Cost"
+                          name="EstimatedCost"
+                          value={step.EstimatedCost}
+                          onChange={(e) =>
+                            handleStepChange(stageIndex, stepIndex, e)
+                          }
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="btn btn-secondary mt-2"
+                    onClick={() => addStep(stageIndex)}
+                  >
+                    + Add Step
+                  </button>
                 </div>
-              ))}
-              <button
-                className="btn btn-secondary mt-2"
-                onClick={() => addStep(index)}
-              >
-                + Add Step
+              );
+            })}
+            <button
+              type="button"
+              className="btn btn-primary w-50"
+              onClick={addStage}
+            >
+              + Add Stage
+            </button>
+
+            <div className="mt-3">
+              <button type="submit" className="btn btn-success w-50">
+                {isEditing ? "Update Crop" : "Save Crop"}
               </button>
-              <input
-                type="number"
-                className="form-control mt-2 w-50"
-                placeholder="Stage Cost"
-                value={stage.cost}
-                onChange={(e) =>
-                  handleStageChange(index, "cost", e.target.value)
-                }
-              />
-              <div className="mt-1 fw-bold">
-                Total Stage Cost: $
-                {Number(stage.cost || 0) +
-                  (stage.steps
-                    ? stage.steps.reduce(
-                        (stepSum, step) => stepSum + Number(step.cost || 0),
-                        0
-                      )
-                    : 0)}
-              </div>
+              {isEditing && (
+                <button
+                  type="button"
+                  className="btn btn-secondary ms-2"
+                  onClick={resetForm}
+                >
+                  Cancel Edit
+                </button>
+              )}
             </div>
-          ))}
-          <button className="btn btn-danger w-50" onClick={addStage}>
-            + Add Stage
-          </button>
-          <div className="mt-3 fw-bold">
-            Total Cost For all stages: $
-            {stages.reduce(
-              (sum, stage) =>
-                sum +
-                Number(stage.cost || 0) +
-                (stage.steps
-                  ? stage.steps.reduce(
-                      (stepSum, step) => stepSum + Number(step.cost || 0),
-                      0
-                    )
-                  : 0),
-              0
-            )}
-          </div>
-          {/* Only show the correct button for add or update */}
-          {editingCropId ? (
-            <button
-              className="btn btn-success w-50 mt-3"
-              onClick={handleConfirmUpdate}
-            >
-              Update Crop
-            </button>
-          ) : (
-            <button
-              className="btn btn-success w-50 mt-3"
-              onClick={handleSubmit}
-            >
-              Add Crop
-            </button>
-          )}
+          </form>
         </div>
+
+        <Dialog
+          open={openDeleteDialog}
+          onClose={() => setOpenDeleteDialog(false)}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this Crop template?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <MuiButton onClick={() => setOpenDeleteDialog(false)}>
+              Cancel
+            </MuiButton>
+            <MuiButton onClick={handleConfirmDelete} color="error">
+              Delete
+            </MuiButton>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );
