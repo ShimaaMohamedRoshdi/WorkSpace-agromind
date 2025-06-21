@@ -1,0 +1,11 @@
+.plan-box {
+    background-color: #fff; /* White background */
+    border: 1px solid #ddd; /* Light border */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .plan-box:hover {
+    transform: translateY(-5px); /* Slight lift effect */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Darker shadow on hover */
+  }
+  
