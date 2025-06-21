@@ -246,13 +246,13 @@ const FarmerPlan = () => {
                         className="btn btn-outline-primary btn-sm"
                         onClick={() => handleEdit(p)}
                       >
-                        Update
+                        Update Plan
                       </button>
                       <button
                         className="btn btn-outline-danger btn-sm"
                         onClick={() => openDeleteModal(p.Id || p.id)}
                       >
-                        Delete
+                        Delete Plan
                       </button>
                     </div>
                   </li>
@@ -324,7 +324,7 @@ const FarmerPlan = () => {
               )})}
             <button type="button" className="btn btn-primary w-50" onClick={addStage}>+ Add Stage</button>
             <div className="mt-3">
-              <button type="submit" className="btn btn-success w-50">{isEditing ? 'Update Plan' : 'Save Plan'}</button>
+              <button type="submit" className="btn btn-success w-50">{isEditing ? 'Save Changes' : 'Save Plan'}</button>
               {isEditing && <button type="button" className="btn btn-secondary ms-2" onClick={resetForm}>Cancel Edit</button>}
             </div>
           </form>

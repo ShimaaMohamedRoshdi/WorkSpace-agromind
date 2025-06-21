@@ -304,13 +304,13 @@ export default function LandFormPage() {
                         onClick={() => handleEdit(land)}
                         className="btn btn-outline-success btn-sm w-100 w-sm-auto"
                       >
-                        Edit
+                        Edit Land
                       </button>
                       <button
                         onClick={() => handleDelete(land.Id)}
                         className="btn btn-outline-danger btn-sm w-100 w-sm-auto"
                       >
-                        Delete
+                        Delete Land
                       </button>
                       <button
                         onClick={() => handleStartPlantingButton(land)}
@@ -462,7 +462,7 @@ export default function LandFormPage() {
                     width: 200,
                   }}
                 >
-                  {formData.id ? "Save Changes" : "Save"}
+                  {formData.id ? "Update Land" : "Save Land"}
                 </button>
               </div>
             </form>
