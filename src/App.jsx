@@ -41,6 +41,10 @@ import RecommendPlan from "./pages/RecommendPlan";
 import PlanProgress from "./pages/PlanProgress";
 import FarmerPlan from "./pages/FarmerPlan";
 import ViewMyPlans from "./pages/ViewMyPlans";
+import Contact from "./pages/Contact";
+import Services from "./pages/Services";
+import TeamSection from "./components/TeamSection";
+import TeamSectionPage from "./pages/TeamSection";
 
 function App() {
   const [order, setOrder] = useState(null);
@@ -57,6 +61,10 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/crops" element={<Crops />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/crops" element={<Crops />} />
+        <Route path="/teamfarmers" element={<TeamSectionPage />} />
         <Route path="/shopproducts" element={<ShopPage />} />
         <Route path="/shop-by-category" element={<ShopByCategory />} />
         <Route path="/product/:id" element={<ProductDetails />} />
@@ -89,3 +97,4 @@ function App() {
 }
 
 export default App;
+

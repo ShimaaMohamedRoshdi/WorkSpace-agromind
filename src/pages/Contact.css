@@ -1,0 +1,376 @@
+.contact-page {
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hero Section */
+.contact-hero {
+  position: relative;
+  height: 400px;
+  background-image: url('../assets/images/contactus/15.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: 50px;
+}
+
+.contact-hero .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hero-content {
+  position: relative;
+  text-align: center;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  animation: fadeInDown 1s ease;
+}
+
+.breadcrumb {
+  animation: fadeInUp 1s ease;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.breadcrumb-link {
+  color: #f8b84e;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.breadcrumb-current {
+  color: #fff;
+}
+
+/* Contact Container */
+.contact-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto 80px;
+  padding: 0 20px;
+  gap: 40px;
+  position: relative;
+}
+
+/* Farmer Image */
+.farmer-image-container {
+  position: absolute;
+  left: -80px;
+  bottom: -20px;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.farmer-image {
+  height: 400px;
+  animation: floatAnimation 4s ease-in-out infinite;
+}
+
+/* Plant Decoration */
+.plant-decoration {
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 150px;
+  z-index: 1;
+  animation: growAnimation 5s ease-in-out infinite;
+}
+
+@media (max-width: 992px) {
+  .contact-container {
+    flex-direction: column;
+  }
+}
+
+/* Form Section */
+.contact-form-section {
+  flex: 1;
+  background-color: #f9f9f9;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  animation: slideInLeft 1s ease;
+  position: relative;
+  z-index: 2;
+  margin-left: 100px; /* Make space for the farmer image */
+}
+
+.form-header {
+  margin-bottom: 30px;
+}
+
+.form-header h2 {
+  color: #28a745;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.form-header h3 {
+  font-size: 2rem;
+  color: #333;
+  margin-top: 0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+input:focus, textarea:focus {
+  border-color: #28a745;
+  outline: none;
+}
+
+.error {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.submit-btn {
+  background-color: #f8b84e;
+  color: #333;
+  border: none;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.submit-btn:hover {
+  background-color: #e9a939;
+  transform: translateY(-3px);
+}
+
+.success-message {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #d4edda;
+  color: #155724;
+  border-radius: 5px;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+/* Contact Info Section */
+.contact-info-section {
+  flex: 1;
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  animation: slideInRight 1s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.contact-info-section h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.contact-info-section p {
+  color: #666;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.info-item {
+  margin-bottom: 25px;
+}
+
+.info-item h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.info-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  color: #28a745;
+  font-size: 20px;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes floatAnimation {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes growAnimation {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .farmer-image-container {
+    left: -40px;
+  }
+  
+  .contact-form-section {
+    margin-left: 60px;
+  }
+}
+
+@media (max-width: 992px) {
+  .contact-container {
+    flex-direction: column;
+  }
+  
+  .farmer-image-container {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  
+  .contact-form-section {
+    margin-left: 0;
+  }
+  
+  .plant-decoration {
+    width: 100px;
+    right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .contact-hero {
+    height: 300px;
+  }
+  
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .farmer-image {
+    height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .farmer-image {
+    height: 250px;
+  }
+  
+  .plant-decoration {
+    width: 80px;
+  }
+}
+

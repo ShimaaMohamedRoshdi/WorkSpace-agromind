@@ -11,7 +11,7 @@ const ShopBanner = () => {
       {/* Content on top of overlay */}
       <div className="content">
         <p className="subheading">Buy Health Foods At Our Store</p>
-        <h1 className="title ">SHOP CROPS</h1>
+        <h1 className="title ">SHOP HERE </h1>
         <div className="underline"></div>
         <nav className="breadcrumb-container">
           <Link to="/" className="breadcrumb-link">

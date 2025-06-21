@@ -1,63 +1,89 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import ProductCard from "../components/ProductCard";
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import ProductCard from '../components/ProductCard';
+import './ShopByCategory.css';
 
 const ShopByCategory = () => {
+  // Get products from Redux store
   const products = useSelector((state) => state.product.products || []);
   const products2 = useSelector((state) => state.product.products2 || []);
   const products3 = useSelector((state) => state.product.products3 || []);
   const products4 = useSelector((state) => state.product.products4 || []);
+
+  // Combine all products
   const allProducts = [...products, ...products2, ...products3, ...products4];
 
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [sortOption, setSortOption] = useState("nameAsc");
+  // State for filters
+  const [activeCategory, setActiveCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortOption, setSortOption] = useState("nameAsc");
   const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 });
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [categories, setCategories] = useState([
+    "Crop",
+    "Vegetable", 
+    "Fruit",
+    "Herb",
+    "Organic Pesticide",
+    "Herbicide",
+  ]);
+  const [loading, setLoading] = useState(false);
 
-  // Normalize categories and collect unique values (lowercase, fallback to "uncategorized")
-  const categories = Array.from(
-    new Set(
-      allProducts.map((p) => (p.category || "Uncategorized").toLowerCase())
-    )
-  );
+  // Remove any API calls that might be overriding your categories
+  useEffect(() => {
+    // No API calls here, just use the hardcoded categories
+    console.log("Using categories:", categories);
+  }, []);
 
-  // Toggle category selection (using lowercase values)
-  const toggleCategory = (category) => {
-    if (selectedCategories.includes(category)) {
-      setSelectedCategories(selectedCategories.filter((c) => c !== category));
-    } else {
-      setSelectedCategories([...selectedCategories, category]);
-    }
-  };
+  // Debug: Log all products and their categories
+  useEffect(() => {
+    console.log("All products:", allProducts);
+    console.log(
+      "Product categories:",
+      allProducts.map((p) => p.category)
+    );
+  }, [allProducts]);
 
-  // Filter by selected categories
-  let filtered = selectedCategories.length
-    ? allProducts.filter((p) =>
-        selectedCategories.includes(
-          (p.category || "Uncategorized").toLowerCase()
-        )
-      )
-    : allProducts;
+  // Debug: Log when category changes
+  useEffect(() => {
+    console.log("Active category changed to:", activeCategory);
+  }, [activeCategory]);
 
-  // Filter by search
-  if (searchTerm.trim()) {
-    filtered = filtered.filter((p) =>
-      (p.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter products
+  let filteredProducts = [...allProducts];
+
+  // Apply category filter
+  if (activeCategory) {
+    console.log(`Filtering by category: ${activeCategory}`);
+    filteredProducts = filteredProducts.filter((product) => {
+      const match = product.category === activeCategory;
+      console.log(
+        `Product: ${product.name}, Category: ${product.category}, Match: ${match}`
+      );
+      return match;
+    });
+  }
+
+  // Apply search filter
+  if (searchTerm) {
+    filteredProducts = filteredProducts.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
-  // Filter by price range
-  filtered = filtered.filter(
-    (p) => p.price >= priceRange.min && p.price <= priceRange.max
+  // Apply price filter
+  filteredProducts = filteredProducts.filter(
+    (product) =>
+      product.price >= priceRange.min && product.price <= priceRange.max
   );
 
-  // Sort the filtered products
-  const sortedProducts = [...filtered].sort((a, b) => {
+  // Sort products
+  filteredProducts.sort((a, b) => {
     switch (sortOption) {
       case "nameAsc":
-        return (a.name || "").localeCompare(b.name || "");
+        return a.name.localeCompare(b.name);
       case "nameDesc":
-        return (b.name || "").localeCompare(a.name || "");
+        return b.name.localeCompare(a.name);
       case "priceAsc":
         return a.price - b.price;
       case "priceDesc":
@@ -67,49 +93,42 @@ const ShopByCategory = () => {
     }
   });
 
+  // Handle category button click
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category === activeCategory ? "" : category);
+  };
+
   return (
     <div className="container py-5">
-      <h2 className="text-center mb-4 fw-bold">Shop By Category</h2>
+      <h2 className="text-center mb-4">Shop By Category</h2>
       <div className="row">
-        {/* Filters Panel */}
-        <div className="col-md-3 mb-4">
-          {/* Sort */}
+        {/* Filters */}
+        <div className="col-md-3">
           <div className="mb-3">
-            <label htmlFor="sort" className="form-label fw-semibold">
-              Sort by:
-            </label>
+            <label className="form-label">Sort by:</label>
             <select
-              id="sort"
+              className="form-select"
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className="form-select"
-              style={{ cursor: "pointer" }}
             >
-              <option value="nameAsc">Name Ascending</option>
-              <option value="nameDesc">Name Descending</option>
-              <option value="priceAsc">Price Ascending</option>
-              <option value="priceDesc">Price Descending</option>
+              <option value="nameAsc">Name (A-Z)</option>
+              <option value="nameDesc">Name (Z-A)</option>
+              <option value="priceAsc">Price (Low to High)</option>
+              <option value="priceDesc">Price (High to Low)</option>
             </select>
           </div>
-
-          {/* Search */}
           <div className="mb-3">
-            <label htmlFor="search" className="form-label fw-semibold">
-              Search:
-            </label>
+            <label className="form-label">Search:</label>
             <input
               type="text"
-              id="search"
+              className="form-control"
+              placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="form-control"
-              placeholder="Search by name"
             />
           </div>
-
-          {/* Price Range */}
           <div className="mb-3">
-            <label className="form-label fw-semibold">Price Range:</label>
+            <label className="form-label">Price Range:</label>
             <div className="d-flex gap-2">
               <input
                 type="number"
@@ -117,7 +136,7 @@ const ShopByCategory = () => {
                 placeholder="Min"
                 value={priceRange.min}
                 onChange={(e) =>
-                  setPriceRange({ ...priceRange, min: +e.target.value })
+                  setPriceRange({ ...priceRange, min: Number(e.target.value) })
                 }
               />
               <input
@@ -126,67 +145,84 @@ const ShopByCategory = () => {
                 placeholder="Max"
                 value={priceRange.max}
                 onChange={(e) =>
-                  setPriceRange({ ...priceRange, max: +e.target.value })
+                  setPriceRange({ ...priceRange, max: Number(e.target.value) })
                 }
               />
             </div>
           </div>
-
           {/* Categories */}
-          <div
-            className="border rounded p-3 shadow-sm"
-            style={{ maxHeight: "400px", overflowY: "auto" }}
-          >
-            <h5 className="mb-3">Categories</h5>
-            <form>
-              {categories.map((cat, index) => (
-                <div className="form-check" key={`${cat}-${index}`}>
+          <div className="mb-3 p-4 rounded-3 border border-2 border-success">
+            <h5 className="fw-bold">Categories</h5>
+            {loading ? (
+              <p>Loading categories...</p>
+            ) : (
+              <>
+                <div className="form-check">
                   <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id={`cat-${cat}`}
-                    checked={selectedCategories.includes(cat)}
-                    onChange={() => toggleCategory(cat)}
+                    className="form-check-input me-2"
+                    type="radio"
+                    id="category-all"
+                    name="category"
+                    checked={activeCategory === ""}
+                    onChange={() => setActiveCategory("")}
                   />
-                  <label
-                    className="form-check-label text-capitalize"
-                    htmlFor={`cat-${cat}`}
-                  >
-                    {cat}
+                  <label className="form-check-label" htmlFor="category-all">
+                    All Products
                   </label>
                 </div>
-              ))}
-            </form>
-
-            {/* Selected Categories */}
-            {selectedCategories.length > 0 && (
-              <div className="mt-3">
-                <h6 className="fw-semibold">Selected:</h6>
-                <ul className="list-group list-group-flush">
-                  {selectedCategories.map((cat) => (
-                    <li
-                      key={`selected-${cat}`}
-                      className="list-group-item text-capitalize py-1"
+                <div className="category-list">
+                  {categories.map((category) => (
+                    <div 
+                      className="form-check" 
+                      key={typeof category === 'object' ? category.Id : category}
                     >
-                      {cat}
-                    </li>
+                      <input
+                        className="form-check-input me-2"
+                        type="radio"
+                        id={`category-${typeof category === 'object' ? category.Id : category}`}
+                        name="category"
+                        checked={activeCategory === (typeof category === 'object' ? category.CategoryName : category)}
+                        onChange={() => setActiveCategory(typeof category === 'object' ? category.CategoryName : category)}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor={`category-${typeof category === 'object' ? category.Id : category}`}
+                      >
+                        {typeof category === 'object' ? category.CategoryName : category}
+                      </label>
+                    </div>
                   ))}
-                </ul>
-              </div>
+                </div>
+              </>
             )}
           </div>
+          <div className="mb-3">
+            <h6 className="fw-bold">Selected:</h6>
+            <p className="border border-success p-2 rounded">{activeCategory || "All Products"}</p>
+          </div>
         </div>
-
-        {/* Products Grid */}
+        {/* Products */}
         <div className="col-md-8">
-          {sortedProducts.length === 0 ? (
+          {activeCategory && (
+            <h4 className="mb-3">Category: {activeCategory}</h4>
+          )}
+          {filteredProducts.length === 0 ? (
             <p className="text-center">
-              No products found matching the filters.
+              No products found matching your criteria.
             </p>
           ) : (
-            <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-              {sortedProducts.map((product) => (
-                <div key={`product-${product.id}`} className="col">
+            <div style={{ display: 'flex', flexWrap: 'wrap', margin: '0 -10px' }}>
+              {filteredProducts.map((product) => (
+                <div 
+                  key={product.id} 
+                  className="product-card-container"
+                  style={{ 
+                    width: windowWidth < 576 ? '100%' : '33.333%', 
+                    padding: '0 10px', 
+                    marginBottom: '20px',
+                    boxSizing: 'border-box'
+                  }}
+                >
                   <ProductCard product={product} />
                 </div>
               ))}
@@ -199,3 +235,23 @@ const ShopByCategory = () => {
 };
 
 export default ShopByCategory;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

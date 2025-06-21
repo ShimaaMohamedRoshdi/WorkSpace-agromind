@@ -37,20 +37,10 @@ const Crops = () => {
     }
   });
 
-  // Add sample startDate and dateDuration to products
-  const productsWithDates = sortedProducts.map(product => {
-    const startDate = product.startDate || "2023-01-01";
-    const dateDuration = product.dateDuration || 90; // duration in days
-    // Calculate endDate by adding dateDuration days to startDate
-    const endDate = new Date(new Date(startDate).getTime() + dateDuration * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .split("T")[0];
-    return {
-      ...product,
-      startDate,
-      dateDuration,
-      endDate,
-    };
+  // Remove date-related properties from products
+  const cleanedProducts = sortedProducts.map(product => {
+    const { startDate, dateDuration, endDate, duration, ...cleanProduct } = product;
+    return cleanProduct;
   });
 
   const handlePriceChange = (e) => {
@@ -136,12 +126,12 @@ const Crops = () => {
           </div>
         </div>
         <div className="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
-          {sortedProducts.length === 0 ? (
+          {cleanedProducts.length === 0 ? (
             <p className="text-center fw-semibold fs-5">
               No products found matching your criteria.
             </p>
           ) : (
-            productsWithDates.map((product) => (
+            cleanedProducts.map((product) => (
               <div key={product.id} className="col">
                 <ProductCard product={product} />
               </div>
@@ -154,3 +144,5 @@ const Crops = () => {
 };
 
 export default Crops;
+
+

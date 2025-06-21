@@ -151,7 +151,7 @@ nav {
   
   /* Top Header */
   .bg-light {
-    background-color: #f8f7f2 !important;
+    background-color: #f2f8f5 !important;
     border-bottom: 1px solid #ddd;
   }
   
@@ -171,7 +171,7 @@ nav {
     align-items: center;
     width: 100%!important;
     max-width: 400px;
-    background: #fff;
+    background: #ffffff;
     border-radius: 25px;
     border: 1px solid #ddd;
     -webkit-border-radius: 25px;
@@ -282,12 +282,163 @@ nav {
     .navbar-nav {
       text-align: start!important;
     }
-    .navbar-nav .nav-item :hover{
-        background-color: #5b9e42;
-    }
-  
+   
     .navbar-nav .nav-item {
       padding: 2px 0;
     }
   }
+   /* Navbar transition effects */
+.navbar {
+  transition: all 0.3s ease;
+}
+
+/* Nav links hover animation */
+.navbar-nav .nav-link {
+  position: relative;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #5b9e42;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+/* Icon animations */
+.navbar a svg {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.navbar a:hover svg {
+  transform: scale(1.2);
+  color: #5b9e42;
+}
+
+/* Badge animations */
+.badge {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.position-relative:hover .badge {
+  transform: scale(1.1);
+}
+
+/* Dropdown menu animations */
+.dropdown-menu {
+  transform-origin: top center;
+  animation: dropdownFade 0.3s ease forwards;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Search results animation */
+.list-group {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Mobile menu animation */
+.navbar-collapse {
+  transition: all 0.4s ease-in-out;
+}
+
+.navbar-collapse.show {
+  animation: slideDown 0.4s ease forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background-color: #fff;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    padding: 10px;
+  }
   
+  .navbar-nav .nav-item {
+    transition: background-color 0.3s ease;
+  }
+  
+  .navbar-toggler {
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .navbar-toggler:hover {
+    transform: rotate(90deg);
+    border-color: #5b9e42 !important;
+  }
+}
+
+/* Custom dropdown icon styling */
+.custom-dropdown-icon {
+  color: #5b9e42;
+  transition: transform 0.3s ease;
+}
+
+/* Remove default dropdown arrow */
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+/* Dropdown hover effect */
+.nav-item.dropdown:hover .custom-dropdown-icon {
+  transform: translateY(2px);
+}
+
+/* Active dropdown styling */
+.nav-link.dropdown-toggle[aria-expanded="true"] .custom-dropdown-icon {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 991px) {
+  .nav-link.dropdown-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .custom-dropdown-icon {
+    margin-left: auto;
+  }
+}
+  
+

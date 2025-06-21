@@ -7,8 +7,6 @@ import img6 from "./فراولة-امامي-400x457.jpg";
 import img7 from "./كمثرى-صفرا-امامى-400x457.jpg";
 import img8 from "./وينكا-امامي-400x457.jpg";
 import img9 from "./ينسون-امامي-400x457.jpg";
-
-import image11 from "./1 (3).png";
 import image12 from "./2 (2).png";
 import image13 from "./4 (1).png";
 import image14 from "./3.png";
@@ -70,162 +68,6 @@ import image121 from "./productsimgs/Pineapple - أناناس.webp";
 import image122 from "./productsimgs/Plums Yellow - خوخ أصفر.jpg";
 import image123 from "./productsimgs/Pomegranate - رمان.jpg";
 import image124 from "./productsimgs/Potato egypt - بطاطا مصرية.jpeg";
-import image125 from "./productsimgs/Potato egypt - بطاطا مصرية.jpeg";
-
-// export const mockData = [
-//   {
-//     id: 1,
-//     image: img1,
-//     name: "Nasturtium",
-//     price: 39.99,
-//     description:
-//       "A vibrant edible flower with peppery flavor, often used in salads and garnishes.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 2,
-//     image: img2,
-//     name: "Chrysant",
-//     price: 29.99,
-//     description:
-//       "Chrysanthemum, known for its beautiful blooms, is used in teas and traditional medicine.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 3,
-//     image: img3,
-//     name: "Green Chili ",
-//     price: 49.99,
-//     description:
-//       "Fresh green chili peppers, perfect for adding heat and flavor to dishes.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 4,
-//     image: img4,
-//     name: "Mallow ",
-//     price: 19.99,
-//     description:
-//       "Mallow leaves are used in soups and stews, known for their mild flavor and health benefits.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 5,
-//     image: img5,
-//     name: "Fennel",
-//     price: 39.1,
-//     description:
-//       "Fennel is a crunchy, slightly sweet vegetable with a flavor similar to licorice.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 6,
-//     image: img6,
-//     name: "Strawberry",
-//     price: 50.99,
-//     description:
-//       "Juicy and sweet strawberries, perfect for desserts and snacks.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 7,
-//     image: img7,
-//     name: "Yellow Pear",
-//     price: 29.99,
-//     description:
-//       "Yellow pears are sweet and juicy, great for eating fresh or in salads.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 8,
-//     image: img8,
-//     name: " Periwinkle",
-//     price: 49.99,
-//     description:
-//       "Periwinkle flowers are known for their vibrant colors and are often used in gardens.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 9,
-//     image: img9,
-//     name: " Anise",
-//     price: 79.99,
-//     description:
-//       "Anise seeds have a sweet, licorice-like flavor and are used in cooking and baking.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 10,
-//     image: img1,
-//     name: "Nasturtium",
-//     price: 39.99,
-//     description:
-//       "A vibrant edible flower with peppery flavor, often used in salads and garnishes.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 11,
-//     image: img2,
-//     name: "Chrysant",
-//     price: 29.99,
-//     description:
-//       "Chrysanthemum, known for its beautiful blooms, is used in teas and traditional medicine.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 12,
-//     image: img3,
-//     name: "Green Chili ",
-//     price: 49.99,
-//     description:
-//       "Fresh green chili peppers, perfect for adding heat and flavor to dishes.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 13,
-//     image: img5,
-//     name: "Fennel",
-//     price: 39.1,
-//     description:
-//       "Fennel is a crunchy, slightly sweet vegetable with a flavor similar to licorice.",
-//   },
-//   {
-//     id: 14,
-//     image: img6,
-//     name: "Strawberry",
-//     price: 50.99,
-//     description:
-//       "Juicy and sweet strawberries, perfect for desserts and snacks.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 15,
-//     image: img7,
-//     name: "Yellow Pear",
-//     price: 29.99,
-//     description:
-//       "Yellow pears are sweet and juicy, great for eating fresh or in salads.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 16,
-//     image: img8,
-//     name: " Periwinkle",
-//     price: 49.99,
-//     description:
-//       "Periwinkle flowers are known for their vibrant colors and are often used in gardens.",
-//     category: "Crop",
-//   },
-//   {
-//     id: 17,
-//     image: img9,
-//     name: " Anise",
-//     price: 79.99,
-//     description:
-//       "Anise seeds have a sweet, licorice-like flavor and are used in cooking and baking.",
-//     category: "Crop",
-//   },
-// ];
 export const mockData = [
   {
     id: 1,
@@ -235,9 +77,6 @@ export const mockData = [
     description:
       "A vibrant edible flower with peppery flavor, often used in salads and garnishes.",
     category: "Crop",
-    startDate: "2023-03-01",
-    duration: 90,
-    endDate: "2023-05-30",
   },
   {
     id: 2,
@@ -247,9 +86,7 @@ export const mockData = [
     description:
       "Chrysanthemum, known for its beautiful blooms, is used in teas and traditional medicine.",
     category: "Crop",
-    startDate: "2023-04-15",
-    duration: 75,
-    endDate: "2023-06-29",
+  
   },
   {
     id: 3,
@@ -326,7 +163,7 @@ export const mockData = [
   {
     id: 9,
     image: img9,
-    name: " Anise",
+    name: "jhins",
     price: 79.99,
     description:
       "Anise seeds have a sweet, licorice-like flavor and are used in cooking and baking.",
@@ -343,9 +180,6 @@ export const mockData = [
     description:
       "A vibrant edible flower with peppery flavor, often used in salads and garnishes.",
     category: "Crop",
-    startDate: "2023-03-01",
-    duration: 90,
-    endDate: "2023-05-30",
   },
   {
     id: 11,
@@ -589,10 +423,10 @@ export const mockData2 = [
   {
     id: 86,
     image: image14,
-    name: "Broccoli",
+    name: "Grapes",
     price: 19.99,
-    description: "Fresh broccoli, rich in vitamins and minerals.",
-    category: "Vegetable",
+    description: "Fresh Grapes, rich in vitamins and minerals.",
+    category: "Fruit",
   },
   {
     id: 87,
@@ -605,10 +439,10 @@ export const mockData2 = [
   {
     id: 88,
     image: image16,
-    name: "Spinach",
+    name: "Banana",
     price: 50.99,
-    description: "Fresh spinach leaves, great for salads and cooking.",
-    category: "Vegetable",
+    description: "Fresh bananas, perfect for snacking and baking.",
+    category: "Fruit",
   },
   {
     id: 89,
@@ -621,26 +455,26 @@ export const mockData2 = [
   {
     id: 90,
     image: image18,
-    name: "Zucchini",
+    name: "Avocado",
     price: 49.99,
-    description: "Fresh zucchini, great for grilling and cooking.",
-    category: "Vegetable",
+    description: " Fresh  avocados, perfect for salads and sandwiches.",
+    category: "Fruit",
   },
   {
     id: 91,
     image: image19,
-    name: "Eggplant",
+    name: "Kewi",
     price: 79.99,
-    description: "Fresh eggplant, perfect for grilling and roasting.",
-    category: "Vegetable",
+    description: "Tangy and sweet Iranian kiwi fruit.",
+    category: "Fruit",
   },
   {
     id: 92,
     image: image20,
-    name: "Cucumber",
+    name: "Orange",
     price: 39.99,
-    description: "Crisp cucumbers, great for salads and snacking.",
-    category: "Vegetable",
+    description: "Fresh oranges, rich in vitamin C.",
+    category: "Fruit",
   },
   {
     id: 93,
@@ -656,7 +490,7 @@ export const mockData3 = [
   {
     id: 30,
     image: image30,
-    name: "تاجليس",
+    name: "Tagless Pesticide",
     price: 39.99,
     description:
       "A natural pesticide used to protect plants from pests and diseases.",
@@ -665,7 +499,7 @@ export const mockData3 = [
   {
     id: 40,
     image: image31,
-    name: "توبناين",
+    name: "TopNine Pesticide",
     price: 29.99,
     description:
       "An organic pesticide effective against a wide range of insects.",
@@ -674,7 +508,7 @@ export const mockData3 = [
   {
     id: 32,
     image: image32,
-    name: "برفكتووان",
+    name: "PerfectOne Pesticide",
     price: 49.99,
     description: "A highly effective organic pesticide for controlling pests.",
     category: "Organic Pesticide",
@@ -682,7 +516,7 @@ export const mockData3 = [
   {
     id: 33,
     image: image33,
-    name: "tehnooil",
+    name: "TechnoOil Pesticide",
     price: 19.99,
     description: "An organic oil used as a pesticide to control various pests.",
     category: "Organic Pesticide",
@@ -690,7 +524,7 @@ export const mockData3 = [
   {
     id: 34,
     image: image34,
-    name: "image00025",
+    name: "NaturalGuard Pesticide",
     price: 39.1,
     description:
       "An organic pesticide used to protect plants from pests and diseases.",
@@ -699,7 +533,7 @@ export const mockData3 = [
   {
     id: 35,
     image: image35,
-    name: "image00002",
+    name: "EcoShield Pesticide",
     price: 50.99,
     description:
       "A natural pesticide used to protect plants from pests and diseases.",
@@ -708,7 +542,7 @@ export const mockData3 = [
   {
     id: 36,
     image: image36,
-    name: "zentari",
+    name: "Zentari Pesticide",
     price: 29.99,
     description:
       "An organic pesticide effective against a wide range of insects.",
@@ -717,7 +551,7 @@ export const mockData3 = [
   {
     id: 37,
     image: image37,
-    name: "كوفريت",
+    name: "Covrite Pesticide",
     price: 49.99,
     description: "A highly effective organic pesticide for controlling pests.",
     category: "Organic Pesticide",
@@ -728,7 +562,7 @@ export const mockData4 = [
   {
     id: 70,
     image: image70,
-    name: "اتلانت",
+    name: "Atlant Herbicide",
     price: 39.99,
     description: "A herbicide used to control a wide range of weeds.",
     category: "Herbicide",
@@ -736,7 +570,7 @@ export const mockData4 = [
   {
     id: 71,
     image: image71,
-    name: "تايجرفوس",
+    name: "TigerPhos Herbicide",
     price: 29.99,
     description:
       "An effective herbicide for controlling various types of weeds.",
@@ -745,7 +579,7 @@ export const mockData4 = [
   {
     id: 72,
     image: image72,
-    name: "باسفوليارسوبر",
+    name: "BasFoliar Super",
     price: 49.99,
     description: "A highly effective herbicide for controlling tough weeds.",
     category: "Herbicide",
@@ -753,7 +587,7 @@ export const mockData4 = [
   {
     id: 73,
     image: image73,
-    name: "بلنتبرود",
+    name: "PlantBroad Herbicide",
     price: 19.99,
     description: "A herbicide used to control a wide range of weeds.",
     category: "Herbicide",
@@ -761,7 +595,7 @@ export const mockData4 = [
   {
     id: 74,
     image: image74,
-    name: "بوباكسلارج",
+    name: "BubacsLarge Herbicide",
     price: 39.1,
     description:
       "An effective herbicide for controlling various types of weeds.",
@@ -770,7 +604,7 @@ export const mockData4 = [
   {
     id: 75,
     image: image75,
-    name: "جرين",
+    name: "Green Herbicide",
     price: 50.99,
     description: "A highly effective herbicide for controlling tough weeds.",
     category: "Herbicide",
@@ -778,7 +612,7 @@ export const mockData4 = [
   {
     id: 76,
     image: image76,
-    name: "دلتاميكرو",
+    name: "DeltaMicro Herbicide",
     price: 29.99,
     description: "A herbicide used to control a wide range of weeds.",
     category: "Herbicide",
@@ -786,7 +620,7 @@ export const mockData4 = [
   {
     id: 77,
     image: image77,
-    name: "روتباور",
+    name: "RootPower Herbicide",
     price: 49.99,
     description:
       "An effective herbicide for controlling various types of weeds.",
@@ -795,7 +629,7 @@ export const mockData4 = [
   {
     id: 78,
     image: image78,
-    name: "image00025",
+    name: "WeedGuard Herbicide",
     price: 19.99,
     description: "A herbicide used to control a wide range of weeds.",
     category: "Herbicide",
@@ -806,7 +640,7 @@ export const mockData5 = [
   {
     id: 100,
     image: image100,
-    name: "افينيو",
+    name: "Avenue Insecticide",
     price: 39.99,
     description:
       "A powerful insecticide used to control a wide range of pests.",
@@ -815,7 +649,7 @@ export const mockData5 = [
   {
     id: 101,
     image: image101,
-    name: "اييزو",
+    name: "EasyZo Insecticide",
     price: 29.99,
     description:
       "An effective insecticide for controlling various types of insects.",
@@ -824,7 +658,7 @@ export const mockData5 = [
   {
     id: 102,
     image: image102,
-    name: "بيني",
+    name: "Penny Insecticide",
     price: 49.99,
     description: "A highly effective insecticide for controlling tough pests.",
     category: "Insecticide",
@@ -832,7 +666,7 @@ export const mockData5 = [
   {
     id: 103,
     image: image103,
-    name: "شينوك",
+    name: "Chinook Insecticide",
     price: 19.99,
     description: "An insecticide used to control a wide range of pests.",
     category: "Insecticide",
@@ -840,7 +674,7 @@ export const mockData5 = [
   {
     id: 104,
     image: image104,
-    name: "برناستار",
+    name: "BernaStar Insecticide",
     price: 39.1,
     description:
       "An effective insecticide for controlling various types of insects.",
@@ -849,7 +683,7 @@ export const mockData5 = [
   {
     id: 105,
     image: image105,
-    name: "chinook",
+    name: "Chinook Premium",
     price: 50.99,
     description: "A highly effective insecticide for controlling tough pests.",
     category: "Insecticide",
@@ -857,7 +691,7 @@ export const mockData5 = [
   {
     id: 106,
     image: image106,
-    name: "penny",
+    name: "Penny Plus",
     price: 29.99,
     description: "An insecticide used to control a wide range of pests.",
     category: "Insecticide",
@@ -865,10 +699,35 @@ export const mockData5 = [
   {
     id: 107,
     image: image107,
-    name: "كاجورا",
+    name: "Kagura Insecticide",
     price: 49.99,
     description:
       "An effective insecticide for controlling various types of insects.",
     category: "Insecticide",
   },
 ];
+
+// Helper to ensure unique IDs and trimmed categories
+defaultExportCleanup();
+
+function defaultExportCleanup() {
+  // Helper to generate unique IDs
+  let nextId = 1;
+  const usedIds = new Set();
+  function getUniqueId() {
+    while (usedIds.has(nextId)) nextId++;
+    usedIds.add(nextId);
+    return nextId++;
+  }
+
+  // Clean a data array: assign unique IDs and trim category
+  function cleanArray(arr) {
+    arr.forEach((item) => {
+      item.id = getUniqueId();
+      if (item.category) item.category = item.category.trim();
+    });
+  }
+
+  [mockData, mockData2, mockData3, mockData4, mockData5].forEach(cleanArray);
+}
+

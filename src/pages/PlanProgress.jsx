@@ -239,7 +239,6 @@ const PlanProgress = () => {
                   </span>
                   {stage.StageName}
                 </Typography>
-
                 {isCompleted && (
                   <i className="bi bi-check-circle-fill fs-4"></i>
                 )}
@@ -270,7 +269,7 @@ const PlanProgress = () => {
                             color="text.secondary"
                             mb={2}
                           >
-                            Step Duration:
+                            Step Duration:  
                             {step.DurationDays || 0} day
                           </Typography>
                         </Typography>

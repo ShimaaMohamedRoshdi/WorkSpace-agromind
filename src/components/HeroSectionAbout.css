@@ -1,0 +1,41 @@
+.hero-about-section {
+  font-family: 'Arial', sans-serif;
+}
+
+.hero-about-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.breadcrumb-nav {
+  font-size: 1rem;
+}
+
+.breadcrumb {
+  background: transparent;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.breadcrumb-item {
+  color: #f4b41a;
+}
+
+.breadcrumb-item a.breadcrumb-link {
+  color: #f4b41a;
+  text-decoration: none;
+}
+
+.breadcrumb-item a.breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+  color: white;
+  font-weight: 600;
+}
+
+.fas.fa-home {
+  margin-right: 5px;
+}

@@ -2,19 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Categories.css";
 
-import cat77 from "../assets/images/categ7.png";
 import cat2 from "../assets/images/categ3.png";
 import cat7 from "../assets/images/categ7.png";
 import cat4 from "../assets/images/categ2.png";
 import cat1 from "../assets/images/categ1.png";
 
 const categories = [
-  {
-    title: "Featured Products",
-    image: cat77,
-    gradient: true,
-    path: "/category/featured",
-  },
   { title: "Herbicides", image: cat2, path: "/category/herbicides" },
   {
     title: "Insecticides",
@@ -49,7 +42,7 @@ const Categories = () => {
                 onClick={() => handleClick(categories[0].path)}
                 style={{ backgroundImage: `url(${categories[0].image})` }}
               >
-                <span>Featured Products</span>
+                <span>Herbicides</span>
               </div>
             </div>
 
@@ -59,22 +52,12 @@ const Categories = () => {
                 onClick={() => handleClick(categories[1].path)}
                 style={{ backgroundImage: `url(${categories[1].image})` }}
               >
-                <span>Herbicides</span>
+                <span>Insecticides</span>
               </div>
               <div
                 className="cat-box half"
                 onClick={() => handleClick(categories[2].path)}
                 style={{ backgroundImage: `url(${categories[2].image})` }}
-              >
-                <span>Insecticides</span>
-              </div>
-            </div>
-
-            <div className="d-flex gap-3">
-              <div
-                className="cat-box gradient"
-                onClick={() => handleClick(categories[3].path)}
-                style={{ backgroundImage: `url(${categories[3].image})` }}
               >
                 <span>Organic Pesticides</span>
               </div>
@@ -100,3 +83,7 @@ const Categories = () => {
 };
 
 export default Categories;
+
+
+
+

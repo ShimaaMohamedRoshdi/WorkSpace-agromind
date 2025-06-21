@@ -1,14 +1,32 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import './About.css';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import HeroSectionAbout from '../components/HeroSectionAbout';
+import AboutInfoSection from '../components/AboutInfoSection';
+import AboutTimelineSection from '../components/AboutTimelineSection';
+import ImpactSection from '../components/ImpactSection';
+import TeamSection from '../components/TeamSection';
 
 function About() {
-  return (
-      <div>
-       
-          <p>Hello from bout Page</p>
+  useEffect(() => {
+    AOS.init({ duration: 800, easing: "ease-out", once: false });
+  }, []);
 
-      </div>
-  )
+  return (
+    <div className="about-page">
+      <HeroSectionAbout />
+      <AboutInfoSection />
+      <AboutTimelineSection />
+      <ImpactSection />
+      <TeamSection />
+      {/* Additional about page content can go here */}
+    </div>
+  );
 }
 
-export default About
+export default About;
+
+
+

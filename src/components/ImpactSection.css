@@ -1,0 +1,283 @@
+.impact-section {
+  padding: 5rem 0;
+  background-color: #f9f9f9;
+  position: relative;
+  overflow: hidden;
+}
+
+.impact-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../assets/images/Aboutus/3\ \(2\).png');
+  opacity: 0.05;
+  z-index: 0;
+}
+
+.impact-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.impact-subtitle {
+  color: #4caf50;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.impact-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #1b3a1a;
+  margin-bottom: 1.5rem;
+}
+
+.impact-divider {
+  width: 80px;
+  height: 4px;
+  background-color: #f4b41a;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.impact-image-container {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.impact-image {
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.impact-stats {
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  display: flex;
+  gap: 15px;
+}
+
+.stat-item {
+  background-color: #4caf50;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  min-width: 120px;
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.stat-text {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.impact-content {
+  padding-left: 2rem;
+}
+
+.impact-lead {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+.impact-goals {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.impact-goal {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.impact-goal:hover {
+  transform: translateX(10px);
+}
+
+.goal-icon {
+  font-size: 2rem;
+  background-color: rgba(76, 175, 80, 0.1);
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.goal-content h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1b3a1a;
+  margin-bottom: 0.5rem;
+}
+
+.goal-content p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.impact-cta {
+  margin-top: 2rem;
+}
+
+.btn-learn-more {
+  background-color: #f4b41a;
+  color: #1b3a1a;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-learn-more:hover {
+  background-color: #1b3a1a;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.impact-testimonial {
+  margin-top: 5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonial-content {
+  background-color: white;
+  border-radius: 15px;
+  padding: 3rem;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.testimonial-quote {
+  text-align: center;
+  position: relative;
+  padding: 0 2rem;
+}
+
+.testimonial-quote i {
+  color: #4caf50;
+  opacity: 0.3;
+  font-size: 1.5rem;
+}
+
+.testimonial-quote i.fa-quote-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.testimonial-quote i.fa-quote-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.testimonial-quote p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #333;
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.author-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  /* Using an actual image from your assets */
+  background-image: url('../assets/images/Aboutus/1\ \(5\).jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.author-info {
+  text-align: left;
+}
+
+.author-info h5 {
+  font-weight: 700;
+  color: #1b3a1a;
+  margin-bottom: 0.2rem;
+}
+
+.author-info p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 992px) {
+  .impact-content {
+    padding-left: 0;
+    margin-top: 3rem;
+  }
+  
+  .impact-stats {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    margin-top: -50px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .impact-title {
+    font-size: 2.2rem;
+  }
+  
+  .impact-lead {
+    font-size: 1.1rem;
+  }
+  
+  .testimonial-content {
+    padding: 2rem;
+  }
+  
+  .testimonial-quote p {
+    font-size: 1.1rem;
+  }
+}

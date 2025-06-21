@@ -64,11 +64,12 @@ const ProductCard = ({ product }) => {
   return (
     <>
       <div
-        className="card h-100 w-100 border-0 shadow-sm position-relative product-card-animated"
+        className="card h-100 border-0 shadow-sm position-relative product-card-animated"
         style={{
           borderRadius: "16px",
           background: "#f5f7fa",
           transition: "box-shadow 0.2s, transform 0.2s",
+          width: "100%", // Ensure card takes full width of its container
         }}
       >
         {/* Discount Label */}
@@ -136,12 +137,8 @@ const ProductCard = ({ product }) => {
                 </span>
               )}
             </div>
-            {/* Start Date, Date Duration and End Date */}
-            <div className="text-center mb-2" style={{ fontSize: 14, color: "#555" }}>
-              <div>Start Date: {product.startDate}</div>
-              <div>Duration: {product.dateDuration} days</div>
-              <div>End Date: {product.endDate}</div>
-            </div>
+            
+            {/* Removed the Start Date, Date Duration and End Date section */}
 
             {/* Product Rating */}
             <div className="d-flex justify-content-center mb-2">
@@ -196,3 +193,6 @@ const ProductCard = ({ product }) => {
 };
 
 export default ProductCard;
+
+
+

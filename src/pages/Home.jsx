@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HealthyFoods from "../components/HealthyFoods";
-import Products from "../components/Products";
 import "./Home.css";
 import AgricultureSkill from "../components/AgricultureSkill";
 import HeroSection from "../components/HeroSection";
@@ -9,6 +8,7 @@ import FarmerSection from "../components/FarmerSection";
 import HealthyLifeSection from "../components/HealthyLifeSection";
 import OrganicSection from "../components/OrganicSection";
 import Categories from "../components/Categories";
+import Brands from "../components/Brands";
 
 function Home() {
   const navigate = useNavigate();
@@ -45,6 +45,8 @@ function Home() {
           backgroundImage: "url('/src/assets/images/index-2.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "100% center",
+          position: "relative",
+          overflow: "hidden" // Add this to ensure the zigzag is visible
         }}
       >
         {/* Dark Overlay */}
@@ -91,13 +93,13 @@ function Home() {
       {/* All other sections of your Home page */}
       <AgricultureSkill />
       <HeroSection />
-      <hr />
       <Categories />
-      <hr />
+      <hr/>
       <FarmerSection />
       <HealthyFoods />
       <HealthyLifeSection />
       <OrganicSection />
+      <Brands/>
       
       {/* <Products /> */}
     </div>
@@ -105,3 +107,5 @@ function Home() {
 }
 
 export default Home;
+
+
