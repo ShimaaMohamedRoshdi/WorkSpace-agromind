@@ -605,27 +605,36 @@ const [activeDropdown, setActiveDropdown] = useState(null);
 
         {/* Wishlist, Cart, and Register Icon */}
         <div className="d-flex align-items-center gap-4 ms-5 mt-3 mt-md-0">
-          <Link to="/wishlist" className="position-relative text-dark">
-            <FaRegHeart size={24} className="icon-hover" />
-            {wishlistQuantity > 0 && (
-              <span className="position-absolute top-0 start-100 translate-middle badge bg-danger">
-                {wishlistQuantity}
-              </span>
-            )}
-          </Link>
-
-          <Link to="/cart" className="position-relative text-dark">
-            <FaShoppingCart size={24} className="icon-hover" />
-            {cartQuantity > 0 && (
-              <span className="position-absolute top-0 start-100 translate-middle badge bg-danger">
-                {cartQuantity}
-              </span>
-            )}
-          </Link>
-
-          <Link to="/signup" className="text-dark">
-            <FaUser size={24} className="icon-hover" />
-          </Link>
+        {isLoggedIn ? (
+            // --- SHOW THESE ICONS IF LOGGED IN ---
+            <>
+              <Link to="/wishlist" className="position-relative text-dark" title="Wishlist">
+                <FaRegHeart size={24} className="icon-hover" />
+                {wishlistQuantity > 0 && (
+                  <span className="position-absolute top-0 start-100 translate-middle badge bg-danger">
+                    {wishlistQuantity}
+                  </span>
+                )}
+              </Link>
+              <Link to="/cart" className="position-relative text-dark" title="Cart">
+                <FaShoppingCart size={24} className="icon-hover" />
+                {cartQuantity > 0 && (
+                  <span className="position-absolute top-0 start-100 translate-middle badge bg-danger">
+                    {cartQuantity}
+                  </span>
+                )}
+              </Link>
+              <button onClick={handleLogout} className="btn btn-link text-danger p-0" title="Logout">
+                <FaSignOutAlt size={24} className="icon-hover" />
+              </button>
+            </>
+          ) : (
+            // --- SHOW THIS ICON IF LOGGED OUT ---
+            <Link to="/signin" className="text-dark" title="Sign In / Register">
+              <FaUser size={24} />
+            </Link>
+          )
+}
         </div>
       </div>
 
@@ -684,7 +693,7 @@ const [activeDropdown, setActiveDropdown] = useState(null);
                
           
                 {/* <li className="nav-item"><Link className="nav-link fw-bold text-dark" to="/crops" onClick={closeNavbar}>Shop</Link></li> */}
-                <li className="nav-item dropdown">
+                {isLoggedIn && <li className="nav-item dropdown">
                   <Link
                     className="nav-link fw-bold text-dark dropdown-toggle d-flex align-items-center"
                     to="#"
@@ -748,7 +757,7 @@ const [activeDropdown, setActiveDropdown] = useState(null);
                       </Link>
                     </li>
                   </ul>
-                </li>
+                </li>}
 
                 <li className="nav-item">
                   <Link
