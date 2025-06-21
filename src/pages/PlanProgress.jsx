@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Progress } from "../components/Progress "; // Your progress bar component
 import "bootstrap-icons/font/bootstrap-icons.css";
+import ShopButton from "../components/ShopButton";
 import {
   TextField,
   Button,
@@ -238,6 +239,7 @@ const PlanProgress = () => {
                   </span>
                   {stage.StageName}
                 </Typography>
+
                 {isCompleted && (
                   <i className="bi bi-check-circle-fill fs-4"></i>
                 )}
@@ -268,7 +270,7 @@ const PlanProgress = () => {
                             color="text.secondary"
                             mb={2}
                           >
-                            Step Duration:  
+                            Step Duration:
                             {step.DurationDays || 0} day
                           </Typography>
                         </Typography>
@@ -373,6 +375,18 @@ const PlanProgress = () => {
           <p>You have completed all stages for {plan.CropName}.</p>
         </div>
       )}
+
+      {/* ✅ ADDED: A fixed container for the flying shop button */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: "30px",
+          right: "30px",
+          zIndex: 1000, // Make sure it's on top of other content
+        }}
+      >
+        <ShopButton />
+      </div>
 
       <Snackbar
         open={snackbar.open}
