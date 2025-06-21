@@ -379,6 +379,7 @@ export default function Navbar() {
   // State to track login status
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+const [activeDropdown, setActiveDropdown] = useState(null);
 
   // Check for token on component load and on navigation changes
   // Using location.pathname ensures it re-checks if the URL changes,
