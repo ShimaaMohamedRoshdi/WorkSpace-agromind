@@ -72,7 +72,7 @@ function Home() {
                 className="btn btn-light btn-lg w-100 d-flex justify-content-center align-items-center"
                 onClick={handleMyLandsClick}
               >
-                My Lands <span className="ms-2">➝</span>
+                View My Lands <span className="ms-2">➝</span>
               </button>
               <button
                 className="btn btn-warning btn-lg w-100 d-flex justify-content-center align-items-center"
