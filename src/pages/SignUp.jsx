@@ -148,9 +148,32 @@ const SignUp = () => {
         <h1 className="text-center mt-2 text-success">SignUp</h1>
       </div>
       <div className="signup-wrapper">
+<<<<<<< HEAD
        
         <div className="right-section ">
           
+=======
+        <div className="left-section">
+          <h2>Join Now!</h2>
+          <p>Join us today for a smarter farming future!</p>
+          <div className="social-buttons">
+            <button className="social-btn facebook">
+              <FaFacebook size={20} /> Join with Facebook
+            </button>
+            <button className="social-btn twitter">
+              <FaTwitter size={20} /> Join with Twitter
+            </button>
+            <button className="social-btn google">
+              <FaGoogle size={20} /> Join with Google
+            </button>
+            <button className="social-btn instagram">
+              <FaInstagram size={20} /> Join with Instagram
+            </button>
+          </div>
+        </div>
+
+        <div className="right-section ">
+>>>>>>> 71c91059fd5a3b1b3eae44adfa2dd3479e999ed7
           {/* <h1>Register</h1> */}
           <Formik
             initialValues={{
@@ -292,7 +315,11 @@ const SignUp = () => {
       </div>
 
       <div className=" login-here-div">
+<<<<<<< HEAD
         <p className=" m-auto ">
+=======
+        <p className=" m-auto p-3">
+>>>>>>> 71c91059fd5a3b1b3eae44adfa2dd3479e999ed7
           Already Have An Account?
           <Link to="/signin"> Login here</Link>
         </p>
