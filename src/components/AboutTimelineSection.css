@@ -1,0 +1,226 @@
+.about-timeline-section {
+  position: relative;
+  font-family: 'Arial', sans-serif;
+  margin-top: 6rem;
+  margin-bottom: 6rem;
+  padding: 3rem;
+  background: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url('../assets/images/tractor-disk-plow.webp') no-repeat center;
+  background-size: cover;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.about-timeline-content {
+  max-width: 800px;
+  margin: 0 auto 4rem auto;
+  text-align: center;
+}
+
+.timeline-subtitle {
+  color: #4caf50;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+.timeline-heading {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #1b3a1a;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.timeline-heading:after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: #f4b41a;
+  border-radius: 2px;
+}
+
+.timeline-description {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.8;
+  margin-top: 2rem;
+}
+
+.timeline-wrapper {
+  position: relative;
+  padding: 3rem 0;
+}
+
+.timeline-bg-image {
+  display: none; /* Background image handled on container */
+}
+
+.timeline-line {
+  position: relative;
+  height: 4px;
+  background-color: #e0e0e0;
+  margin: 0 20px;
+  border-radius: 2px;
+  z-index: 2;
+}
+
+.timeline-milestones {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-top: -15px;
+  z-index: 3;
+}
+
+.timeline-milestone {
+  text-align: center;
+  flex: 1;
+  position: relative;
+  padding: 0 15px;
+  transition: transform 0.3s ease;
+}
+
+.timeline-milestone:hover {
+  transform: translateY(-10px);
+}
+
+.milestone-circle {
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border: 4px solid #e0e0e0;
+  border-radius: 50%;
+  margin: 0 auto 20px auto;
+  position: relative;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.milestone-inner-circle {
+  width: 12px;
+  height: 12px;
+  background-color: #4caf50;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.timeline-milestone:hover .milestone-circle {
+  border-color: #4caf50;
+  transform: scale(1.2);
+}
+
+.timeline-milestone:hover .milestone-inner-circle {
+  opacity: 1;
+}
+
+.milestone-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  height: 100%;
+  min-height: 180px;
+}
+
+.timeline-milestone:hover .milestone-content {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  background-color: #f9fff9;
+}
+
+.milestone-year {
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #4caf50;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.milestone-title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.8rem;
+  transition: color 0.3s ease;
+}
+
+.milestone-description {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.timeline-facts-container {
+  margin-top: 5rem;
+  padding-top: 3rem;
+  border-top: 1px dashed #e0e0e0;
+}
+
+.timeline-fact {
+  text-align: center;
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
+
+.timeline-fact:hover {
+  transform: translateY(-5px);
+}
+
+.fact-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #4caf50;
+  margin-bottom: 0.5rem;
+}
+
+.fact-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+}
+
+@media (max-width: 992px) {
+  .timeline-milestones {
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .timeline-line {
+    display: none;
+  }
+  
+  .milestone-circle {
+    margin-bottom: 15px;
+  }
+  
+  .timeline-milestone {
+    padding: 0 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-timeline-section {
+    padding: 2rem 1.5rem;
+  }
+  
+  .timeline-heading {
+    font-size: 2.2rem;
+  }
+  
+  .timeline-description {
+    font-size: 1rem;
+  }
+  
+  .fact-number {
+    font-size: 2rem;
+  }
+}

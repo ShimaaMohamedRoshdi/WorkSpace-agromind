@@ -1,0 +1,115 @@
+/* src/components/StepperProgress.css */
+.stepper-container {
+    width: 100%;
+    padding: 20px 0;
+    box-sizing: border-box;
+  }
+  
+  .stepper-wrapper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 0 15px;
+  }
+  
+  .stepper-line-bg,
+  .stepper-line-fg {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    height: 4px;
+    border-radius: 2px;
+    z-index: 1;
+  }
+  
+  .stepper-line-bg {
+    width: 100%;
+    background-color: #e9ecef;
+  }
+  
+  .stepper-line-fg {
+    background-color: #0d6efd;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .stepper-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+  
+  .step-indicator {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid #adb5bd;
+    color: #adb5bd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+  
+  .stepper-step.completed .step-indicator {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+  }
+  
+  .step-label {
+    font-size: 0.85rem;
+    color: #495057;
+    margin-top: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+  }
+  
+  /* Adjust first and last step for line alignment - for MULTIPLE steps */
+  .stepper-wrapper:not(.single-step-mode) > .stepper-step:first-child {
+    align-items: flex-start;
+  }
+  .stepper-wrapper:not(.single-step-mode) > .stepper-step:first-child .step-label {
+    transform: translateX(-40%);
+  }
+  
+  .stepper-wrapper:not(.single-step-mode) > .stepper-step:last-child {
+    align-items: flex-end;
+  }
+  .stepper-wrapper:not(.single-step-mode) > .stepper-step:last-child .step-label {
+    transform: translateX(40%);
+  }
+  
+  
+  /* --- REPLACEMENT FOR :has() --- */
+  /* If only one step, center it */
+  .stepper-wrapper.single-step-mode {
+    justify-content: center; /* Center the single step within the wrapper */
+    margin: 0; /* Remove margins if only one step, not strictly necessary but cleaner */
+  }
+  
+  .stepper-wrapper.single-step-mode .stepper-step {
+    align-items: center; /* Ensure the single step's content is centered */
+    flex-basis: auto; /* Let it take its natural width */
+    flex-grow: 0;   /* Don't let it grow to fill space (it's already centered by parent) */
+  }
+  
+  .stepper-wrapper.single-step-mode .stepper-step .step-label {
+    transform: translateX(0); /* Reset any transforms from first/last child rules */
+  }
+  
+  /* Hide lines if only one step */
+  .stepper-wrapper.single-step-mode .stepper-line-bg,
+  .stepper-wrapper.single-step-mode .stepper-line-fg {
+    display: none;
+  }
+  /* --- END OF REPLACEMENT --- */

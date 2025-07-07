@@ -1,0 +1,96 @@
+/* Category list styling */
+.category-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+}
+
+.category-list .form-check {
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive styles for small screens */
+@media (max-width: 992px) {
+  .mb-3.p-4.rounded-3.border.border-2.border-success .form-check-input {
+    transform: scale(0.8);
+  }
+  
+  .mb-3.p-4.rounded-3.border.border-2.border-success .form-check-label {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .mb-3.p-4.rounded-3.border.border-2.border-success .form-check-input {
+    transform: scale(0.7);
+  }
+  
+  .mb-3.p-4.rounded-3.border.border-2.border-success .form-check-label {
+    font-size: 0.85rem;
+  }
+  
+  .category-list .form-check {
+    margin-bottom: 0.4rem;
+  }
+}
+
+/* Only add responsive styles for small mobile screens */
+@media (max-width: 576px) {
+  /* Make products display one per row */
+  .product-card-container {
+    width: 100% !important;
+  }
+  
+  /* Keep existing category styles */
+  .mb-3.p-4.rounded-3.border.border-2.border-success .form-check-input {
+    transform: scale(0.6);
+  }
+  
+  .mb-3.p-4.rounded-3.border.border-2.border-success .form-check-label {
+    font-size: 0.8rem;
+  }
+  
+  .category-list .form-check {
+    margin-bottom: 0.25rem;
+  }
+  
+  .mb-3.p-4.rounded-3.border.border-2.border-success {
+    padding: 0.5rem !important;
+  }
+  
+  .mb-3.p-4.rounded-3.border.border-2.border-success h5.fw-bold {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Even smaller screens */
+@media (max-width: 400px) {
+  .mb-3.p-4.rounded-3.border.border-2.border-success .form-check-input {
+    transform: scale(0.5);
+  }
+  
+  .mb-3.p-4.rounded-3.border.border-2.border-success .form-check-label {
+    font-size: 0.75rem;
+  }
+  
+  .category-list .form-check {
+    margin-bottom: 0.25rem;
+  }
+  
+  .mb-3.p-4.rounded-3.border.border-2.border-success {
+    padding: 0.5rem !important;
+  }
+  
+  .mb-3.p-4.rounded-3.border.border-2.border-success h5.fw-bold {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+
+
+
+
+
+

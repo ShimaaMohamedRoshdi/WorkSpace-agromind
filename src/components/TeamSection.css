@@ -1,0 +1,191 @@
+.team-section {
+  padding: 1rem 0;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.team-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.team-subtitle {
+  color: #4caf50;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.team-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #1b3a1a;
+  margin-bottom: 1.5rem;
+}
+
+.team-divider {
+  width: 80px;
+  height: 4px;
+  background-color: #f4b41a;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.team-description {
+  max-width: 800px;
+  margin: 2rem auto 0;
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.8;
+}
+
+.team-members-container {
+  margin-bottom: 4rem;
+}
+
+.team-member {
+  background-color: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 30px;
+  height: 100%;
+}
+
+.team-member:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+.member-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.member-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.team-member:hover .member-image {
+  transform: scale(1.05);
+}
+
+.member-social {
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  padding: 15px 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  transition: bottom 0.3s ease;
+}
+
+.team-member:hover .member-social {
+  bottom: 0;
+}
+
+.social-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  color: #4caf50;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background-color: #4caf50;
+  color: white;
+  transform: translateY(-3px);
+}
+
+.member-info {
+  padding: 25px;
+}
+
+.member-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1b3a1a;
+  margin-bottom: 0.5rem;
+}
+
+.member-role {
+  font-size: 0.95rem;
+  color: #4caf50;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.member-bio {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.team-cta {
+  text-align: center;
+  background-color: #f9f9f9;
+  padding: 3rem;
+  border-radius: 15px;
+  margin-top: 2rem;
+}
+
+.cta-text {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.btn-join-team {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-join-team:hover {
+  background-color: #1b3a1a;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 992px) {
+  .team-title {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .team-section {
+    padding: 4rem 0;
+  }
+  
+  .team-title {
+    font-size: 2rem;
+  }
+  
+  .team-description {
+    font-size: 1rem;
+  }
+  
+  .member-image {
+    height: 250px;
+  }
+}

@@ -1,0 +1,281 @@
+/* Loading Animation for the green square */
+@keyframes rotateSquare {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 9999;
+}
+
+.square {
+  width: 100px;
+  height: 100px;
+  background-color: green;
+  animation: rotateSquare 3s linear infinite;
+}
+
+.logo-img {
+  width: 30%;
+}
+
+.logo-div {
+  text-align: center;
+
+  width: 100%;
+}
+
+.logo-div h1 {
+  margin-bottom: 1px; /* Further reduced margin-bottom */
+}
+
+.signup-wrapper {
+  display: flex;
+  max-width: 900px;
+  margin: 5px auto;
+  background-color: #fff;
+  border-radius: 10px;
+ 
+  overflow: hidden;
+}
+
+.left-section {
+  flex: 1;
+  padding: 30px;
+  background-color: #f4f7fa;
+  text-align: center;
+}
+
+.left-section h2 {
+  font-size: 1.8rem;
+  color: #2f7c31;
+  margin-bottom: 10px;
+}
+
+.left-section p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.facebook {
+  background-color: #3b5998;
+}
+
+.twitter {
+  background-color: #1da1f2;
+}
+
+.google {
+  background-color: #db4437;
+}
+
+.instagram {
+  background-color: #e4405f;
+}
+.signup-wrapper .right-section {
+  background-color: #fff !important;
+}
+.signin-wrapper .right-section {
+  background-color: #fff !important;
+}
+.right-section {
+
+  flex: 1;
+  padding: 30px;
+  text-align: center;
+  background-color: #fff !important;
+  color: #000 !important;
+}
+.bggg {
+  background-color: #fff !important;
+}
+
+.right-section h1 {
+  font-size: 2rem;
+  color: #2f7c31;
+  margin-bottom: 5px; /* Further reduced margin-bottom */
+}
+
+.form-group {
+  margin-bottom: 15px; /* Equal gap between all inputs */
+}
+
+.form-group input,
+.form-group select,
+.select-field {
+  width: 100%;
+  padding: 8px 10px; /* reduced padding inside inputs globally */
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: #757599;
+  box-sizing: border-box;
+  background: #fff;
+  margin-bottom: 0;
+}
+
+.terms {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #2f7c31;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 20px; /* Add margin below button */
+}
+
+.submit-btn:hover {
+  background-color: #256126;
+}
+
+.login-here-div {
+  background-color: #fff;
+
+  max-width: 900px;
+  margin: 0 auto 40px auto; /* Center and place below button */
+  border-radius: 10px;
+  text-align: center;
+  padding: 15px 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.login-here-div p {
+  margin: 0;
+  color: #000;
+}
+
+.login-here-div p a {
+  color: #2f7c31 !important;
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.login-here-div p a:hover {
+  color: #56ab2f !important;
+}
+
+/* --- IMPROVED RESPONSIVE DESIGN FOR SIGNUP & SIGNIN --- */
+@media (max-width: 1024px) {
+  .signup-wrapper,
+  .signin-wrapper,
+  .login-here-div {
+    max-width: 98vw;
+    margin: 24px auto;
+  }
+  .left-section,
+  .right-section {
+    padding: 18px 12px;
+  }
+}
+@media (max-width: 900px) {
+  .signup-wrapper,
+.signin-wrapper {
+    flex-direction: column;
+    max-width: 98vw;
+    min-width: 0;
+    margin: 18px auto;
+    border-radius: 10px;
+    box-shadow: none !important;
+  }
+  .left-section,
+  .right-section {
+    width: 100%;
+    min-width: 0;
+    padding: 18px 6vw;
+    box-sizing: border-box;
+  }
+  .logo-img,
+  .logo {
+    width: 40vw;
+    min-width: 80px;
+    max-width: 180px;
+  }
+}
+@media (max-width: 600px) {
+  body, html {
+    padding: 0 !important;
+    box-sizing: border-box;
+  }
+  .signup-wrapper,
+  .signin-wrapper,
+  .login-here-div {
+    padding: 10px !important;
+    box-sizing: border-box;
+  }
+  .left-section,
+  .right-section {
+    padding: 10px 0 !important;
+    font-size: 0.95rem;
+  }
+  .gender-options {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100%;
+    margin-bottom: 8px;
+    justify-content: flex-start;
+  }
+  .gender-options label {
+    width: auto;
+    font-size: 1.08rem;
+    gap: 4px;
+    justify-content: flex-start;
+  }
+}
+/* Additional fix for very small screens to ensure full width inputs */
+@media (max-width: 400px) {
+  .left-section,
+  .right-section {
+    padding: 6px 1vw;
+    font-size: 0.9rem;
+  }
+}
