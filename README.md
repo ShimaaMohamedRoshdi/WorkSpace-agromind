@@ -74,7 +74,6 @@ Smarter choices, higher yields, and a greener planet. 🌿
 
 
 ---
-![Uploading screencapture-localhost-5173-home-2025-06-21-03_16_16.png…]()
 
 
 
