@@ -38,7 +38,6 @@
   width: 100%;
 }
 
-<<<<<<< HEAD
 .logo-div h1 {
   margin-bottom: 1px; /* Further reduced margin-bottom */
 }
@@ -50,15 +49,6 @@
   background-color: #fff;
   border-radius: 10px;
  
-=======
-.signup-wrapper {
-  display: flex;
-  max-width: 900px;
-  margin: 50px auto;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
->>>>>>> 71c91059fd5a3b1b3eae44adfa2dd3479e999ed7
   overflow: hidden;
 }
 
@@ -122,10 +112,6 @@
   background-color: #fff !important;
 }
 .right-section {
-<<<<<<< HEAD
-
-=======
->>>>>>> 71c91059fd5a3b1b3eae44adfa2dd3479e999ed7
   flex: 1;
   padding: 30px;
   text-align: center;
@@ -139,7 +125,6 @@
 .right-section h1 {
   font-size: 2rem;
   color: #2f7c31;
-<<<<<<< HEAD
   margin-bottom: 5px; /* Further reduced margin-bottom */
 }
 
@@ -152,29 +137,13 @@
 .select-field {
   width: 100%;
   padding: 8px 10px; /* reduced padding inside inputs globally */
-=======
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 5px;
->>>>>>> 71c91059fd5a3b1b3eae44adfa2dd3479e999ed7
   font-size: 1rem;
   border: 1px solid #ddd;
   border-radius: 5px;
   color: #757599;
-<<<<<<< HEAD
   box-sizing: border-box;
   background: #fff;
   margin-bottom: 0;
-=======
->>>>>>> 71c91059fd5a3b1b3eae44adfa2dd3479e999ed7
 }
 
 .terms {
@@ -198,17 +167,13 @@
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
-<<<<<<< HEAD
   margin-bottom: 20px; /* Add margin below button */
-=======
->>>>>>> 71c91059fd5a3b1b3eae44adfa2dd3479e999ed7
 }
 
 .submit-btn:hover {
   background-color: #256126;
 }
 
-<<<<<<< HEAD
 .login-here-div {
   background-color: #fff;
 
@@ -312,64 +277,4 @@
     padding: 6px 1vw;
     font-size: 0.9rem;
   }
-=======
-@media (max-width: 768px) {
-  .signup-wrapper {
-    flex-direction: column;
-  }
-}
-.row {
-  display: flex;
-  justify-content: space-between;
-  gap: 30px;
-}
-
-.half-width {
-  flex: 1;
-}
-
-/* Styling for radio buttons in a single row */
-.row .form-group label {
-  margin-right: 10px;
-}
-
-.gender-options {
-  display: flex;
-  gap: 20px; /* Adds spacing between radio buttons */
-  align-items: center; /* Ensures proper vertical alignment */
-}
-
-.gender-options label {
-  display: flex;
-  align-items: center;
-  gap: 1px; /* Adds small space between radio button and text */
-}
-.logo-container {
-  text-align: center; /* Centers the logo horizontally */
-  margin-bottom: 20px; /* Adds space between the logo and the rest of the form */
-}
-
-.logo {
-  width: 150px;
-  height: auto;
-  display: inline-block; /* Ensures proper alignment */
-}
-
-.login-here-div {
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  max-width: 900px;
-  margin: 50px auto;
-  border-radius: 10px;
-  text-align: center;
-}
-.login-here-div p a {
-  color: #2f7c31 !important;
-  text-decoration: none;
-}
-
-.login-here-div p {
-  color: #000; /* Default color for the <p> tag */
->>>>>>> 71c91059fd5a3b1b3eae44adfa2dd3479e999ed7
 }
