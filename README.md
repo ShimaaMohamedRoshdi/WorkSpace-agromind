@@ -1,3 +1,4 @@
+![screencapture-localhost-5173-product-40-2025-06-21-03_09_31](https://github.com/user-attachments/assets/c37d4266-c8d0-440c-94f9-da8e659bb450)
 🚀 Our Graduation Project🚀 
 --------------------------------
 🚀 AgroMind: Revolutionizing Smart Farming with AI 🌾
@@ -73,3 +74,8 @@ Smarter choices, higher yields, and a greener planet. 🌿
 
 
 ---
+![Uploading screencapture-localhost-5173-home-2025-06-21-03_28_40.png…]()
+
+
+
+
